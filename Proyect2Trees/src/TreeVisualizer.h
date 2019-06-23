@@ -3,22 +3,34 @@
 
 static int screenW = 640, screenH = 480;
 
+//Nodes class objects
+NodeBET* rootBETnode;
+nodeptr rootBSTnode(nullptr);
+BST bstTree(rootBSTnode);
+
+
 //state machine
 enum STATES {
-	MAIN_MENU, BST_MENU, BET_MENU,  NODE_INFO, TREE_INFO
+	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BET_MENU, NODE_INFO, TREE_INFO
 };
 
 /////////////////////////////////// THIS IS FOR ALL THE STUFF YOU NORMALY DO IN THE PGE.... /////////////////////////////////
 class TreeVisualizer : public olc::PixelGameEngine
 {
 private:
+	//setting
 	STATES state;
-	BST bstTree;
+
+	
+	
+	
+	//user stores
 	std::vector<int> userNumberList;//user array for BST
 	std::string userInfixExpression;//user array for BET
-	nodeptr rootBSTnode;
-	NodeBET* rootBETnode;
 
+	//menu vars
+	int bstMenuOption;
+	int betMenuOption;
 
 public:
 	TreeVisualizer()
@@ -29,6 +41,11 @@ public:
 	bool OnUserCreate() override
 	{
 		state = MAIN_MENU;//setup default
+		
+		
+		bstMenuOption = 1;
+		betMenuOption = 1;
+
 		return true;
 	}
 	bool OnUserUpdate(float fElapsedTime) override
@@ -39,6 +56,19 @@ public:
 			DrawMainMenu();
 		else if (state == BST_MENU)
 			DrawBstMenu();
+		
+		else if (state == BST_INSERT_MODE)
+		{
+			if (InsertNodeMode(fElapsedTime))
+				state = BST_MENU;
+		}
+		else if (state == BST_DELETE_MODE)
+		{
+			if (DeleteNodeMode(fElapsedTime))
+				state = BST_MENU;
+
+		
+		}
 		else if (state == BET_MENU)
 			DrawBetMenu();
 
@@ -80,9 +110,9 @@ public:
 		int option = 1;
 		if (option > 6 || option < 1) option = 1;
 
-		if (GetKey(olc::Key::UP).bReleased)
+		if (GetKey(olc::Key::UP).bPressed)
 			option++;
-		else if (GetKey(olc::Key::DOWN).bReleased)
+		else if (GetKey(olc::Key::DOWN).bPressed)
 			option--;
 
 		FillRect(ScreenWidth() / 2 - 100, 20 + (16 * ((option - 1) / 2)), 200, 11, olc::VERY_DARK_GREY);
@@ -106,16 +136,15 @@ public:
 	{
 		Clear(olc::VERY_DARK_BLUE);
 
-		int option = 1;
-		if (option > 6 || option < 1) option = 1;
+		
+		if (bstMenuOption > 6 || bstMenuOption < 1) bstMenuOption = 1;
 
-		if (GetKey(olc::Key::UP).bReleased)
-			option++;
-		else if (GetKey(olc::Key::DOWN).bReleased)
-			option--;
+		if (GetKey(olc::Key::UP).bReleased) bstMenuOption--;
 
-		FillRect(ScreenWidth()/2 -100, 20 + (16 * ((option - 1) / 2)), 200, 11, olc::VERY_DARK_GREY);
-		DrawRect(ScreenWidth()/2 -100, 20 + (16 * ((option - 1) / 2)), 200, 11, olc::WHITE);
+		else if (GetKey(olc::Key::DOWN).bReleased) bstMenuOption++;
+
+		FillRect(ScreenWidth()/2 -100, (20 * bstMenuOption), 200, 11, olc::VERY_DARK_GREY);
+		DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
 
 		DrawString(ScreenWidth() /2- 100, 20, "1. Insert Node to tree", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 40, "2. Delete Node from tree", olc::WHITE);
@@ -131,16 +160,70 @@ public:
 
 		
 		if (GetKey(olc::Key::M).bReleased)
+		{
 			state = MAIN_MENU;
-
-	}
-
-	void InsetNodeMode()
-	{
+			bstMenuOption = 1;
+			
+		}
+		if (GetKey(olc::Key::ENTER).bReleased)//choose
+		{
+			if (bstMenuOption == 1)
+				state = BST_INSERT_MODE;
+		}
 		
 	
 	}
 
+	bool InsertNodeMode(float deltaTime)
+	{
+		Clear(olc::VERY_DARK_CYAN);
+		
+		DrawString(10, 20, "PRESS ENTER TO INSERT: ");
+		static int number = 0;
+
+		if (GetKey(olc::Key::K0).bReleased) number = number * 10 + 0;
+		if (GetKey(olc::Key::K1).bReleased) number = number * 10 + 1;
+		if (GetKey(olc::Key::K2).bReleased) number = number * 10 + 2;
+		if (GetKey(olc::Key::K3).bReleased) number = number * 10 + 3;
+		if (GetKey(olc::Key::K4).bReleased) number = number * 10 + 4;
+		if (GetKey(olc::Key::K5).bReleased) number = number * 10 + 5;
+		if (GetKey(olc::Key::K6).bReleased) number = number * 10 + 6;
+		if (GetKey(olc::Key::K7).bReleased) number = number * 10 + 7;
+		if (GetKey(olc::Key::K8).bReleased) number = number * 10 + 8;
+		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
+		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
+
+		if (GetKey(olc::Key::ENTER).bReleased)
+		{
+			userNumberList.push_back(number);
+			number = 0;
+		}
+		
+		//draw list
+		DrawString(20, 50, "NODES LIST(START FROM ROOT):");
+
+		for (int i = 0; i < userNumberList.size(); i++)
+		{
+			//add this to bst class
+			bstTree.InsertNode(userNumberList.at(i));//finnally NODE STUFF
+		
+			DrawString(20, 70 + (i * 10) , std::to_string(userNumberList.at(i)) );
+		}
+
+
+		if (GetKey(olc::Key::M).bReleased)
+		{
+			bstMenuOption = 1;
+			return true;
+		}
+		return false;
+	}
+
+	bool DeleteNodeMode(float deltaTime)
+	{
+		
+		return true;
+	}
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
