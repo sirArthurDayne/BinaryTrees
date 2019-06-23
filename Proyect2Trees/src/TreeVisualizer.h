@@ -11,7 +11,7 @@ BST bstTree(rootBSTnode);
 
 //state machine
 enum STATES {
-	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BET_MENU, NODE_INFO, TREE_INFO
+	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO
 };
 
 /////////////////////////////////// THIS IS FOR ALL THE STUFF YOU NORMALY DO IN THE PGE.... /////////////////////////////////
@@ -66,8 +66,11 @@ public:
 		{
 			if (DeleteNodeMode(fElapsedTime))
 				state = BST_MENU;
-
-		
+		}
+		else if (state == BST_TREE)
+		{
+			if (DrawBSTree())
+				state == BST_MENU;
 		}
 		else if (state == BET_MENU)
 			DrawBetMenu();
@@ -136,16 +139,17 @@ public:
 	{
 		Clear(olc::VERY_DARK_BLUE);
 
-		
-		if (bstMenuOption > 6 || bstMenuOption < 1) bstMenuOption = 1;
-
-		if (GetKey(olc::Key::UP).bReleased) bstMenuOption--;
+		if(bstMenuOption > 6 || bstMenuOption < 1) bstMenuOption = 1;
+		  
+		if(GetKey(olc::Key::UP).bReleased) bstMenuOption--;
 
 		else if (GetKey(olc::Key::DOWN).bReleased) bstMenuOption++;
 
 		FillRect(ScreenWidth()/2 -100, (20 * bstMenuOption), 200, 11, olc::VERY_DARK_GREY);
 		DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
 
+
+		//button text
 		DrawString(ScreenWidth() /2- 100, 20, "1. Insert Node to tree", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 40, "2. Delete Node from tree", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 60, "3. Info about a node", olc::WHITE);
@@ -163,12 +167,13 @@ public:
 		{
 			state = MAIN_MENU;
 			bstMenuOption = 1;
-			
 		}
 		if (GetKey(olc::Key::ENTER).bReleased)//choose
 		{
 			if (bstMenuOption == 1)
 				state = BST_INSERT_MODE;
+			else if (bstMenuOption == 2)
+				state = BST_DELETE_MODE;
 		}
 		
 	
@@ -219,10 +224,62 @@ public:
 		return false;
 	}
 
-	bool DeleteNodeMode(float deltaTime)
+	bool DeleteNodeMode(float deltaTime)//NOT COMPLETED
 	{
+		Clear(olc::VERY_DARK_BLUE);
+
+		DrawString(10, 20, "PRESS ENTER TO DELETE: ");
+		static int number = 0;
+
+		if (GetKey(olc::Key::K0).bReleased) number = number * 10 + 0;
+		if (GetKey(olc::Key::K1).bReleased) number = number * 10 + 1;
+		if (GetKey(olc::Key::K2).bReleased) number = number * 10 + 2;
+		if (GetKey(olc::Key::K3).bReleased) number = number * 10 + 3;
+		if (GetKey(olc::Key::K4).bReleased) number = number * 10 + 4;
+		if (GetKey(olc::Key::K5).bReleased) number = number * 10 + 5;
+		if (GetKey(olc::Key::K6).bReleased) number = number * 10 + 6;
+		if (GetKey(olc::Key::K7).bReleased) number = number * 10 + 7;
+		if (GetKey(olc::Key::K8).bReleased) number = number * 10 + 8;
+		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
+		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
+
+		if (GetKey(olc::Key::ENTER).bReleased)
+		{
+			bstTree.EliminateNode(number);	
+			number = 0;
+		}
+
+		//draw list
+		//DrawString(20, 50, "NODES LIST(START FROM ROOT):");
+		//
+		//for (int i = 0; i < userNumberList.size(); i++)
+		//{
+		//	//add this to bst class
+		//	bstTree.InsertNode(userNumberList.at(i));//finnally NODE STUFF
+		//
+		//	DrawString(20, 70 + (i * 10), std::to_string(userNumberList.at(i)));
+		//}
+		//
+
+		if (GetKey(olc::Key::M).bReleased)
+		{
+			bstMenuOption = 1;
+			return true;
+		}
+		return false;
+	}
+
+
+	bool DrawBSTree()
+	{
+		//obtain Vertical space.
+		int heightOfTree = bstTree.HeightTree(bstTree.getRoot());
 		
-		return true;
+		int verticalSpaceForLevel = (ScreenHeight()/2) / heightOfTree;
+
+		int maxWidthSpaceForLevel = std::pow(2, heightOfTree - 1 );
+
+		return false;
 	}
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
