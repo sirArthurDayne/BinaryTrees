@@ -407,37 +407,41 @@ public:
 	}
 
 
-	void PreOrder(nodeptr root)
+	void PreOrder(nodeptr root, std::string& container)
 	{
+
 		if (root != nullptr)//proccess 
-			std::cout << root->getNodeValue() << " - ";
+			container += std::to_string(root->getNodeValue()) + " - ";
+		
 		if (root != nullptr && root->getLeftSubTree() != nullptr)//si hay lado izq
-			PreOrder(root->getLeftSubTree());
+			PreOrder(root->getLeftSubTree(), container);
 		if (root != nullptr && root->getRightSubTree() != nullptr)//si hay lado der
-			PreOrder(root->getRightSubTree());
+			PreOrder(root->getRightSubTree(), container);
 	}
-
-
 	
-	void InOrder(nodeptr root)
+	
+	void InOrder(nodeptr root, std::string& container)
 	{
 		if (root != nullptr && root->getLeftSubTree() != nullptr)//left branch
-			InOrder(root->getLeftSubTree());
+			InOrder(root->getLeftSubTree(), container);
+		
 		if (root != nullptr)//process you want to do
-			std::cout << root->getNodeValue() << " - ";
+			container += std::to_string(root->getNodeValue()) + " - ";
+
 		if (root != nullptr && root->getRightSubTree() != nullptr)//right branch
-			InOrder(root->getRightSubTree());
+			InOrder(root->getRightSubTree(), container);
 	}
 
 
-	void PostOrder(nodeptr root)
+	void PostOrder(nodeptr root, std::string& container)
 	{
 		if (root != nullptr && root->getLeftSubTree() != nullptr)
-			PostOrder(root->getLeftSubTree());
+			PostOrder(root->getLeftSubTree(), container);
 		if (root != nullptr && root->getLeftSubTree() != nullptr)
-			PostOrder(root->getRightSubTree());
+			PostOrder(root->getRightSubTree(), container);
+		
 		if (root != nullptr)//process
-			std::cout << root->getNodeValue() << " - ";
+			container += std::to_string(root->getNodeValue()) + " - ";
 	}
 
 

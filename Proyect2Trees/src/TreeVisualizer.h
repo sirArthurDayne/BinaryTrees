@@ -18,12 +18,9 @@ enum STATES {
 class TreeVisualizer : public olc::PixelGameEngine
 {
 private:
-	//setting
+	//creating nachibe
 	STATES state;
 
-	
-	
-	
 	//user stores
 	std::vector<int> userNumberList;//user array for BST
 	std::string userInfixExpression;//user array for BET
@@ -40,9 +37,9 @@ public:
 public:
 	bool OnUserCreate() override
 	{
-		state = MAIN_MENU;//setup default
+		state = MAIN_MENU;//setup default state
 		
-		
+		//setup menus
 		bstMenuOption = 1;
 		betMenuOption = 1;
 
@@ -87,7 +84,8 @@ public:
 		}
 		else if (state == BST_TRAVERSAL)
 		{
-			
+			if (DrawBstTraversalls())
+				state = BST_MENU;
 		}
 		//option2
 		else if (state == BET_MENU)
@@ -454,6 +452,35 @@ public:
 
 		return false;
 	}
+
+	bool DrawBstTraversalls()
+	{
+		//title
+		Clear(olc::VERY_DARK_GREEN);
+		DrawString(ScreenWidth() / 2 - 100, 25, "TRAVERSALS", olc::WHITE);
+
+		//calculations
+		nodeptr root = bstTree.getRoot();
+		
+		std::string preorderText = "PREORDER: ";
+		std::string inorderText = "INORDER: ";
+		std::string postorderText = "POSTORDER: ";
+		
+		bstTree.PreOrder(root, preorderText);
+		bstTree.InOrder(root, inorderText);
+		bstTree.PostOrder(root, postorderText);
+		
+		//output
+		DrawString(25, 50, preorderText, olc::WHITE);
+		DrawString(25, 100, inorderText, olc::WHITE);
+		DrawString(25, 150, postorderText, olc::WHITE);
+
+		if (GetKey(olc::Key::M).bReleased)
+			return true;
+
+		return false;
+	}
+
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
