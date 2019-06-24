@@ -11,7 +11,7 @@ BST bstTree(rootBSTnode);
 
 //state machine
 enum STATES {
-	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO
+	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO, BST_TRAVERSAL
 };
 
 /////////////////////////////////// THIS IS FOR ALL THE STUFF YOU NORMALY DO IN THE PGE.... /////////////////////////////////
@@ -79,6 +79,15 @@ public:
 		{
 			if (DrawNodeInfo(fElapsedTime))
 				state = BST_MENU;
+		}
+		else if (state == TREE_INFO)//1.5
+		{
+			if (DrawBSTreeInfo())
+				state = BST_MENU;
+		}
+		else if (state == BST_TRAVERSAL)
+		{
+			
 		}
 		//option2
 		else if (state == BET_MENU)
@@ -163,6 +172,8 @@ public:
 			else if (mouseX > 250 && mouseX < 350 && mouseY == 21 ) bstMenuOption = 2;
 			else if (mouseX > 250 && mouseX < 350 && mouseY == 22 ) bstMenuOption = 3;
 			else if (mouseX > 250 && mouseX < 350 && mouseY == 23 ) bstMenuOption = 4;
+			else if (mouseX > 250 && mouseX < 350 && mouseY == 24 ) bstMenuOption = 5;
+			else if (mouseX > 250 && mouseX < 350 && mouseY == 25 ) bstMenuOption = 6;
 		
 			FillRect(ScreenWidth()/2 -100, (20 * bstMenuOption), 200, 11, olc::VERY_DARK_GREY);
 			DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
@@ -174,9 +185,7 @@ public:
 		DrawString(ScreenWidth() /2- 100, 80, "4. Info about a node", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 100, "5. Info about tree ", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 120, "6. Traversal:", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 140, "  6.1 PREORDER", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 160, "  6.2 INORDER", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 180, "  6.3 POSTORDER", olc::WHITE);
+
 		DrawString(ScreenWidth() /2+ 100 , ScreenHeight() - 25, "Press M to MainMenu", olc::WHITE);
 
 
@@ -191,6 +200,10 @@ public:
 				state = BST_TREE;
 			else if (bstMenuOption == 4)
 				state = NODE_INFO;
+			else if (bstMenuOption == 5)
+				state = TREE_INFO;
+			else if (bstMenuOption == 6)
+				state = BST_TRAVERSAL;
 		}
 		
 	
@@ -408,6 +421,36 @@ public:
 			
 			if (GetKey(olc::Key::M).bReleased)
 				return true;
+
+		return false;
+	}
+
+	bool DrawBSTreeInfo()
+	{
+		//title
+		Clear(olc::VERY_DARK_GREY);
+		DrawString(ScreenWidth()/2 - 100, 25, "BINARY TREE INFO", olc::WHITE);
+		
+		//calculations
+		nodeptr root = bstTree.getRoot();
+		int heightofTree = bstTree.HeightTree(root);
+		int totalNodes = bstTree.NodesAmount(root);
+		int leafNodes	 = bstTree.getLeafNodesAmount(root);
+		bool isComplete  = bstTree.IsComplete(root);
+
+		std::string heighText    = "HEIGHT OF THE TREE: " + std::to_string(heightofTree);
+		std::string totalText    = "TOTAL OF NODES IN TREE: " + std::to_string(totalNodes);
+		std::string amountText   = "AMOUNT OF LEAFS NODES: " + std::to_string(leafNodes);
+		std::string completeText = (isComplete) ? "IS COMPLETE?: YES" : "IS COMPLETE?: NO";
+		
+		//output
+		DrawString(ScreenWidth() - 450, 50, heighText, olc::WHITE);
+		DrawString(ScreenWidth() - 450, 100, totalText, olc::WHITE);
+		DrawString(ScreenWidth() - 450, 150, amountText, olc::WHITE);
+		DrawString(ScreenWidth() - 450, 200, completeText , olc::WHITE);
+		
+		if (GetKey(olc::Key::M).bReleased)
+			return true;
 
 		return false;
 	}
