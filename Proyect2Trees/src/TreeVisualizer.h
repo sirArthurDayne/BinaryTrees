@@ -52,26 +52,34 @@ public:
 	{
 		Clear(olc::VERY_DARK_BLUE);
 
+		//init
 		if (state == MAIN_MENU)
 			DrawMainMenu();
+		//option1
 		else if (state == BST_MENU)
 			DrawBstMenu();
 		
-		else if (state == BST_INSERT_MODE)
+		else if (state == BST_INSERT_MODE)//1.1
 		{
 			if (InsertNodeMode(fElapsedTime))
 				state = BST_MENU;
 		}
-		else if (state == BST_DELETE_MODE)
+		else if (state == BST_DELETE_MODE)//1.2
 		{
 			if (DeleteNodeMode(fElapsedTime))
 				state = BST_MENU;
 		}
-		else if (state == BST_TREE)
+		else if (state == BST_TREE)//1.3
 		{
-			if (DrawBSTree())
-				state == BST_MENU;
+			if (DrawBSTree(bstTree.getRoot()))
+				state = BST_MENU;
 		}
+		else if (state == NODE_INFO)//1.4
+		{
+			if (DrawNodeInfo(fElapsedTime))
+				state = BST_MENU;
+		}
+		//option2
 		else if (state == BET_MENU)
 			DrawBetMenu();
 
@@ -145,16 +153,25 @@ public:
 
 		else if (GetKey(olc::Key::DOWN).bReleased) bstMenuOption++;
 
-		FillRect(ScreenWidth()/2 -100, (20 * bstMenuOption), 200, 11, olc::VERY_DARK_GREY);
-		DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
+		
+			int mouseX = GetMouseX();
+			int mouseY = GetMouseY() / 20 + 20;
+			std::cout << "mouseX:" << mouseX << "mouseY" << mouseY << std::endl;
 
+			if		(mouseX > 250 && mouseX < 350 && mouseY == 20 ) bstMenuOption = 1;
+			else if (mouseX > 250 && mouseX < 350 && mouseY == 21 ) bstMenuOption = 2;
+			else if (mouseX > 250 && mouseX < 350 && mouseY == 22 ) bstMenuOption = 3;
+			else if (mouseX > 250 && mouseX < 350 && mouseY == 23 ) bstMenuOption = 4;
+		
+			FillRect(ScreenWidth()/2 -100, (20 * bstMenuOption), 200, 11, olc::VERY_DARK_GREY);
+			DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
 
 		//button text
 		DrawString(ScreenWidth() /2- 100, 20, "1. Insert Node to tree", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 40, "2. Delete Node from tree", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 60, "3. Info about a node", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 80, "4. Info about tree ", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 100, "5. See Tree ", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 60, "3. See Tree ", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 80, "4. Info about a node", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 100, "5. Info about tree ", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 120, "6. Traversal:", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 140, "  6.1 PREORDER", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 160, "  6.2 INORDER", olc::WHITE);
@@ -163,20 +180,24 @@ public:
 
 
 		
-		if (GetKey(olc::Key::M).bReleased)
-		{
-			state = MAIN_MENU;
-			bstMenuOption = 1;
-		}
-		if (GetKey(olc::Key::ENTER).bReleased)//choose
+		if (GetMouse(0).bReleased || GetKey(olc::Key::ENTER).bReleased)//choose
 		{
 			if (bstMenuOption == 1)
 				state = BST_INSERT_MODE;
 			else if (bstMenuOption == 2)
 				state = BST_DELETE_MODE;
+			else if (bstMenuOption == 3)
+				state = BST_TREE;
+			else if (bstMenuOption == 4)
+				state = NODE_INFO;
 		}
 		
 	
+		if (GetKey(olc::Key::M).bReleased)
+		{
+			state = MAIN_MENU;
+			bstMenuOption = 1;
+		}
 	}
 
 	bool InsertNodeMode(float deltaTime)
@@ -198,6 +219,7 @@ public:
 		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
 		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
 
+		DrawString(10, 100, "INSERTING NUMBER: " + std::to_string(number), olc::RED);
 		if (GetKey(olc::Key::ENTER).bReleased)
 		{
 			userNumberList.push_back(number);
@@ -206,18 +228,18 @@ public:
 		
 		//draw list
 		DrawString(20, 50, "NODES LIST(START FROM ROOT):");
-
-		for (int i = 0; i < userNumberList.size(); i++)
-		{
-			//add this to bst class
-			bstTree.InsertNode(userNumberList.at(i));//finnally NODE STUFF
 		
-			DrawString(20, 70 + (i * 10) , std::to_string(userNumberList.at(i)) );
-		}
-
+		for(int i = 0; i < userNumberList.size(); i++)
+		DrawString(300, 50 + (i * 10), std::to_string(userNumberList.at(i)));
 
 		if (GetKey(olc::Key::M).bReleased)
 		{
+				//add this to bst class
+			for (int i = 0; i < userNumberList.size(); i++)
+			{
+				bstTree.InsertNode(userNumberList.at(i));//finnally NODE STUFF
+			}
+
 			bstMenuOption = 1;
 			return true;
 		}
@@ -243,23 +265,14 @@ public:
 		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
 		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
 
+		DrawString(10, 50, "DELETING NUMBER: " + std::to_string(number), olc::RED);
 		if (GetKey(olc::Key::ENTER).bReleased)
 		{
-			bstTree.EliminateNode(number);	
+			bstTree.EliminateNode(number);
 			number = 0;
 		}
 
-		//draw list
-		//DrawString(20, 50, "NODES LIST(START FROM ROOT):");
-		//
-		//for (int i = 0; i < userNumberList.size(); i++)
-		//{
-		//	//add this to bst class
-		//	bstTree.InsertNode(userNumberList.at(i));//finnally NODE STUFF
-		//
-		//	DrawString(20, 70 + (i * 10), std::to_string(userNumberList.at(i)));
-		//}
-		//
+	
 
 		if (GetKey(olc::Key::M).bReleased)
 		{
@@ -269,16 +282,95 @@ public:
 		return false;
 	}
 
-
-	bool DrawBSTree()
+	bool DrawNodeInfo(float deltaTime)
 	{
+		//choose the node to extract info
+		Clear(olc::VERY_DARK_RED);
+
+
+		//static float keytimer = 0;
+		//const char numLayout[10] = { '0','1','2','3','4','5','6','7','8','9'};
+		//
+		//keytimer += deltaTime;
+		//if (keytimer > 0.1)
+		//{
+		//	for (int i = 27; i <= 36; i++) {
+		//		if (GetKey(olc::Key(i)).bReleased)
+		//		{
+		//			testNode.push_back(numLayout[i - 69]);
+		//			keytimer = 0;
+		//		}
+		//	}
+		//
+		//}
+		static int testNode = 0;
+		if (GetKey(olc::Key::K0).bReleased) testNode = testNode * 10 + 0;
+		if (GetKey(olc::Key::K1).bReleased) testNode = testNode * 10 + 1;
+		if (GetKey(olc::Key::K2).bReleased) testNode = testNode * 10 + 2;
+		if (GetKey(olc::Key::K3).bReleased) testNode = testNode * 10 + 3;
+		if (GetKey(olc::Key::K4).bReleased) testNode = testNode * 10 + 4;
+		if (GetKey(olc::Key::K5).bReleased) testNode = testNode * 10 + 5;
+		if (GetKey(olc::Key::K6).bReleased) testNode = testNode * 10 + 6;
+		if (GetKey(olc::Key::K7).bReleased) testNode = testNode * 10 + 7;
+		if (GetKey(olc::Key::K8).bReleased) testNode = testNode * 10 + 8;
+		if (GetKey(olc::Key::K9).bReleased) testNode = testNode * 10 + 9;
+		if (GetKey(olc::Key::BACK).bReleased) testNode /= 10;
+
+		DrawString(20, 50, std::to_string(testNode), olc::WHITE);
+
+		static bool printInfo = false;
+
+		if (GetKey(olc::Key::ENTER).bReleased)
+		{
+			
+			printInfo = true;
+		}
+		if (printInfo)
+		{
+			//longitud to get there
+			std::string lenght = "LENGHT: " + std::to_string( bstTree.LenghtOfaNode( testNode  ));
+			DrawString( 25, 100, lenght);
+			//closeth path
+			//hermano
+			//padre
+			//hijos y grado(cantidad de hijos )
+		}
+		
+
+		if (GetKey(olc::Key::M).bReleased)
+		{
+			printInfo = false;
+			testNode = 0;
+			state = BST_MENU;
+		}
+
+		return false;
+	}
+
+	bool DrawBSTree(nodeptr root)
+	{
+		if (root == nullptr)
+			return true;
+
 		//obtain Vertical space.
 		int heightOfTree = bstTree.HeightTree(bstTree.getRoot());
 		
-		int verticalSpaceForLevel = (ScreenHeight()/2) / heightOfTree;
-
+		int verticalSpaceForLevel = heightOfTree  / (ScreenHeight()/2) ;
+		
 		int maxWidthSpaceForLevel = std::pow(2, heightOfTree - 1 );
 
+
+		
+			
+			DrawBSTree(bstTree.getRightChildNode());
+			
+			//visual
+			DrawCircle((ScreenWidth() / 2 - 10) - 20, 50, 10, olc::DARK_GREY);
+			DrawString((ScreenWidth() / 2 - 10) - 20, 50, std::to_string(bstTree.getRoot()->getNodeValue()), olc::WHITE);
+			
+			DrawBSTree(bstTree.getLeftChildNode());
+		
+		
 		return false;
 	}
 };
