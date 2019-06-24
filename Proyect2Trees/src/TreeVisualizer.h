@@ -71,7 +71,7 @@ public:
 		}
 		else if (state == BST_TREE)//1.3
 		{
-			if (DrawBSTree(bstTree.getRoot()))
+			if ( DrawBSTree(bstTree.getRoot(), ScreenWidth() / 2, 30, ScreenWidth() * 0.20, ScreenHeight() * 0.20))//letter is the data
 				state = BST_MENU;
 		}
 		else if (state == NODE_INFO)//1.4
@@ -239,7 +239,7 @@ public:
 			{
 				bstTree.InsertNode(userNumberList.at(i));//finnally NODE STUFF
 			}
-
+			userNumberList.clear();
 			bstMenuOption = 1;
 			return true;
 		}
@@ -287,14 +287,14 @@ public:
 		//choose the node to extract info
 		Clear(olc::VERY_DARK_RED);
 
-
+		//NOT WORKING
 		//static float keytimer = 0;
 		//const char numLayout[10] = { '0','1','2','3','4','5','6','7','8','9'};
 		//
 		//keytimer += deltaTime;
 		//if (keytimer > 0.1)
 		//{
-		//	for (int i = 27; i <= 36; i++) {
+		//	for (int i = 69; i <= 78; i++) {
 		//		if (GetKey(olc::Key(i)).bReleased)
 		//		{
 		//			testNode.push_back(numLayout[i - 69]);
@@ -321,19 +321,53 @@ public:
 		static bool printInfo = false;
 
 		if (GetKey(olc::Key::ENTER).bReleased)
-		{
-			
 			printInfo = true;
-		}
+		
 		if (printInfo)
 		{
-			//longitud to get there
+			nodeptr node = bstTree.Search(testNode);
+			//length to get there
 			std::string lenght = "LENGHT: " + std::to_string( bstTree.LenghtOfaNode( testNode  ));
 			DrawString( 25, 100, lenght);
 			//closeth path
+
 			//hermano
+			nodeptr brother = ( bstTree.getBrotherNode(node) != nullptr) ? bstTree.getBrotherNode(node) : 0;
+			std::string brotherText;
+			if (brother != 0) brotherText = "BROTHER NODE:" + std::to_string(brother->getNodeValue());
+			else brotherText = "BROTHER NOT FOUND";
+
+			DrawString(25, 125, brotherText);
+			
 			//padre
-			//hijos y grado(cantidad de hijos )
+			nodeptr parent = bstTree.getParentNode(testNode);
+			std::string parentText;
+			
+			if (parent != nullptr) parentText = "PARENT NODE: " + std::to_string(parent->getNodeValue());
+			else parentText = "PARENT NOT FOUND";
+			
+			DrawString(25, 175, brotherText);
+			
+			//hijos y grado(cantidad de hijos)
+			nodeptr leftChild = bstTree.getLeftChildNode();
+			nodeptr rightChild = bstTree.getRightChildNode();
+			int grade;
+			std::string sonsText;
+			if (rightChild != nullptr || leftChild != nullptr) grade = 1;
+			else if (leftChild != nullptr && rightChild != nullptr)
+			{
+				grade = 2;
+				sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: " + std::to_string(leftChild->getNodeValue()) + " RIGHTNODE: " + std::to_string(rightChild->getNodeValue());
+			}
+			else
+			{
+				grade = 0;
+				sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: NULL RIGHTNODE: NULL";
+			}
+
+
+			DrawString(25, 200, sonsText);
+
 		}
 		
 
@@ -347,30 +381,33 @@ public:
 		return false;
 	}
 
-	bool DrawBSTree(nodeptr root)
+	bool DrawBSTree(nodeptr root, int x , int y, int incX, int incY)
 	{
-		if (root == nullptr)
+			//int heightOfTree = bstTree.HeightTree(bstTree.getRoot());
+
+			//int verticalSpaceForLevel = heightOfTree / (ScreenHeight() * 0.5);
+			
+			//int maxWidthSpaceForLevel = std::pow(2, heightOfTree - 1);
+			
+			//int horizontalSpace = ScreenWidth() / maxWidthSpaceForLevel;
+			
+			//int nodeLevel = bstTree.LenghtOfaNode( bstTree.getRoot()->getNodeValue() );
+			
+			FillCircle(x, y, 12, olc::DARK_RED);
+			
+			
+			
+			DrawString(x-4, y-2, std::to_string(root->getNodeValue()), olc::WHITE);
+
+			if (root->getLeftSubTree() != nullptr) 
+				DrawBSTree(root->getLeftSubTree() , x - incX, y + incY, incX * 0.4, incY);
+			
+			if (root->getRightSubTree() != nullptr)
+				DrawBSTree(root->getRightSubTree(), x + incX, y + incY, incX * 0.4, incY);
+
+		if (GetKey(olc::Key::M).bReleased)
 			return true;
 
-		//obtain Vertical space.
-		int heightOfTree = bstTree.HeightTree(bstTree.getRoot());
-		
-		int verticalSpaceForLevel = heightOfTree  / (ScreenHeight()/2) ;
-		
-		int maxWidthSpaceForLevel = std::pow(2, heightOfTree - 1 );
-
-
-		
-			
-			DrawBSTree(bstTree.getRightChildNode());
-			
-			//visual
-			DrawCircle((ScreenWidth() / 2 - 10) - 20, 50, 10, olc::DARK_GREY);
-			DrawString((ScreenWidth() / 2 - 10) - 20, 50, std::to_string(bstTree.getRoot()->getNodeValue()), olc::WHITE);
-			
-			DrawBSTree(bstTree.getLeftChildNode());
-		
-		
 		return false;
 	}
 };

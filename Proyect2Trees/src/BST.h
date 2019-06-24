@@ -362,14 +362,17 @@ public:
 	{	
 		nodeptr parentNode = getParentNode( root->getNodeValue() );
 		//find wich branch are the node caller
-		if (parentNode->getLeftSubTree()->getNodeValue() != root->getNodeValue())
-		{
-			return parentNode->getLeftSubTree();
-		}
-		else if (parentNode->getRightSubTree()->getNodeValue() != root->getNodeValue())
-		{
-			return parentNode->getRightSubTree();
-		}
+		
+			if (parentNode->getLeftSubTree()->getNodeValue() != root->getNodeValue())
+			{
+				return parentNode->getLeftSubTree();
+			}
+		
+			else if (parentNode->getRightSubTree()->getNodeValue() != root->getNodeValue())
+			{
+				return parentNode->getRightSubTree();
+			}
+		
 	}
 
 	int LenghtOfaNode(int data)
