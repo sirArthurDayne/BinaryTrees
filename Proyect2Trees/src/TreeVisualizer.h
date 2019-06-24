@@ -71,7 +71,8 @@ public:
 		}
 		else if (state == BST_TREE)//1.3
 		{
-			if ( DrawBSTree(bstTree.getRoot(), ScreenWidth() / 2, 30, ScreenWidth() * 0.20, ScreenHeight() * 0.20))//letter is the data
+			Clear(olc::BLACK);
+			if ( DrawBSTree(bstTree.getRoot(),ScreenWidth()/2, 0, ScreenWidth() / 2, 30, ScreenWidth() * 0.20, ScreenHeight() * 0.20))//letter is the data
 				state = BST_MENU;
 		}
 		else if (state == NODE_INFO)//1.4
@@ -381,32 +382,32 @@ public:
 		return false;
 	}
 
-	bool DrawBSTree(nodeptr root, int x , int y, int incX, int incY)
+	bool DrawBSTree(nodeptr root, int lineFromX, int lineFromY, int x , int y, int incX, int incY)
 	{
-			//int heightOfTree = bstTree.HeightTree(bstTree.getRoot());
-
-			//int verticalSpaceForLevel = heightOfTree / (ScreenHeight() * 0.5);
 			
-			//int maxWidthSpaceForLevel = std::pow(2, heightOfTree - 1);
-			
-			//int horizontalSpace = ScreenWidth() / maxWidthSpaceForLevel;
-			
-			//int nodeLevel = bstTree.LenghtOfaNode( bstTree.getRoot()->getNodeValue() );
-			
-			FillCircle(x, y, 12, olc::DARK_RED);
-			
-			
-			
-			DrawString(x-4, y-2, std::to_string(root->getNodeValue()), olc::WHITE);
+			DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
 
 			if (root->getLeftSubTree() != nullptr) 
-				DrawBSTree(root->getLeftSubTree() , x - incX, y + incY, incX * 0.4, incY);
+				DrawBSTree(root->getLeftSubTree() , x, y, x - incX, y + incY, incX * 0.5, incY);
 			
 			if (root->getRightSubTree() != nullptr)
-				DrawBSTree(root->getRightSubTree(), x + incX, y + incY, incX * 0.4, incY);
+				DrawBSTree(root->getRightSubTree(), x, y, x + incX, y + incY, incX * 0.5, incY);
 
-		if (GetKey(olc::Key::M).bReleased)
-			return true;
+			FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
+		
+			if (root->getLeftSubTree() == nullptr && root->getRightSubTree() == nullptr)//LEAF NODE
+			{
+				DrawCircle(x,y, 12, olc::MAGENTA);
+				DrawString(x-4, y-2, std::to_string(root->getNodeValue()), olc::WHITE);
+			}
+			else
+			{
+				DrawCircle(x,y, 12, olc::YELLOW);
+				DrawString(x-4, y-2, std::to_string(root->getNodeValue()), olc::WHITE);
+			}
+			
+			if (GetKey(olc::Key::M).bReleased)
+				return true;
 
 		return false;
 	}
