@@ -313,7 +313,7 @@ public:
 		{
 			std::string pathText = "FROM NODE " + std::to_string(nodeptrList.back()->getNodeValue()) + " TO NODE " + std::to_string(nodeptrList.at(nodeptrList.size() - 2)->getNodeValue());
 
-			pge->DrawString(x, y, pathText, olc::RED);
+			pge->DrawString(x, y, pathText, olc::GREEN);
 
 			nodeptrList.pop_back();
 			nodeptrList.shrink_to_fit();
@@ -392,7 +392,25 @@ public:
 	//get brother node algorithm (need fixing)
 	nodeptr getBrotherNode(nodeptr root)
 	{	
+		nodeptr parent = getParentNode( root->getNodeValue() );
+
+		if (parent != nullptr)
+		{
+			nodeptr leftBro = parent->left;
+			nodeptr rightBro = parent->right;
 		
+			if (leftBro != nullptr || rightBro != nullptr)
+			{
+				if (leftBro->getNodeValue() != root->letter && rightBro->getNodeValue() == root->letter)
+					return leftBro;
+				else if (leftBro->getNodeValue() == root->letter && rightBro->getNodeValue() != root->letter)
+					return rightBro;
+			}
+			else return nullptr;
+			
+		}
+		else
+			return nullptr;
 
 		
 		
@@ -695,6 +713,7 @@ NodeBET* ConstructTree(std::string postfix)
 
 	NodeBET* t1(nullptr); NodeBET* t2(nullptr);
 	NodeBET* output(nullptr);
+
 	//traverse
 	for (char c : postfix)
 	{

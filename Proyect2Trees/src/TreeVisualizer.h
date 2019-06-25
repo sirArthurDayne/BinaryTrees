@@ -8,17 +8,87 @@ NodeBET* rootBETnode;
 nodeptr rootBSTnode(nullptr);
 BST bstTree(rootBSTnode);
 
+/////////////////////TEXT INPUT MANAGER///////////////////////////////////////
+class TextField {
+private:
+	int maxLetters = 25, screenW = 240, screenH = 220;
+	std::string fieldTxt = "";
+	bool isInvisible = false;
+	bool isHidden = false;
+	const char keyLayout[37] = { ' ','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9' };
+	const char shiftLayout[37] = { ' ','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',')','!','@','#','$','%','^','&','*','(' };
+	const char numLayout[15] = { '0','1','2','3','4','5','6','7','8','9','*','/','+','-','.' };
+
+
+
+	char  lGetLetterPressed() {
+		if (Canvas->GetKey(olc::Key(63)).bPressed) return '<';
+		else if (Canvas->GetKey(olc::Key(53)).bPressed) return ' ';
+		for (int i = 1; i < 37; i++) {
+			if (Canvas->GetKey(olc::Key::SHIFT).bHeld) {
+				if (Canvas->GetKey(olc::Key(i)).bPressed) return shiftLayout[i];
+			}
+			else if (Canvas->GetKey(olc::Key(i)).bPressed) return keyLayout[i];
+		}
+
+		for (int i = 69; i <= 83; i++) {
+			if (Canvas->GetKey(olc::Key(i)).bPressed) return numLayout[i - 69];
+		}
+		return 'å';
+	}
+
+
+public:
+	TextField(olc::PixelGameEngine &Canvas) {
+		this->Canvas = &Canvas;
+		fieldTxt = "";
+	}
+
+	void updateField() {
+		bool aClick = false;
+		if (Canvas->GetMouse(0).bPressed) aClick = true;
+		else if (Canvas->GetMouse(0).bHeld) aClick = true;
+		else if (Canvas->GetMouse(0).bReleased) aClick = true;
+		bool tEnter = false;
+		if (Canvas->GetKey(olc::ENTER).bPressed) tEnter = true;
+		else if (Canvas->GetKey(olc::ENTER).bHeld) tEnter = true;
+		else if (Canvas->GetKey(olc::ENTER).bReleased) tEnter = true;
+		if (true) {
+			char newLetter = lGetLetterPressed();
+			if (newLetter == '<' && fieldTxt.length() > 0) {
+				std::string tempString = "";
+				for (int i = 0; i < fieldTxt.length() - 1; i++) tempString += fieldTxt[i];
+				fieldTxt.clear();
+				fieldTxt = tempString;
+				fieldTxt.shrink_to_fit();
+			}
+			else if (newLetter != 'å' && newLetter != '<' && fieldTxt.size() <= maxLetters) fieldTxt += newLetter;
+		}
+	}
+
+	olc::PixelGameEngine *Canvas;
+
+	std::string getString() { return fieldTxt; }
+
+};
+
 
 //state machine
 enum STATES {
 	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO, BST_TRAVERSAL, BET_INSERT_MODE, BET_TREE, BET_TRAVERSAL
 };
 
+
 /////////////////////////////////// THIS IS FOR ALL THE STUFF YOU NORMALY DO IN THE PGE.... /////////////////////////////////
+
 class TreeVisualizer : public olc::PixelGameEngine
 {
 private:
-	//creating nachibe
+	
+	
+	TextField text = TextField(*this);
+	
+	//creating machine 
 	STATES state;
 
 	//user stores
@@ -32,13 +102,14 @@ private:
 public:
 	TreeVisualizer()
 	{
+		
+		
 		sAppName = "Proyect 2 Binary Trees";
 	}
 public:
 	bool OnUserCreate() override
 	{
 		state = MAIN_MENU;//setup default state
-		
 		//setup menus
 		bstMenuOption = 1;
 		betMenuOption = 1;
@@ -53,7 +124,7 @@ public:
 		if (state == MAIN_MENU)
 			DrawMainMenu();
 		
-		//1
+		///////1. BST STATES///////
 		else if (state == BST_MENU)
 			DrawBstMenu();
 		
@@ -89,19 +160,29 @@ public:
 				state = BST_MENU;
 		}
 		
-		//2
+		///////2. BET STATES///////
 		else if (state == BET_MENU)
 			DrawBetMenu();
 
-		else if (state == BET_INSERT_MODE)
+		else if (state == BET_INSERT_MODE)//2.1
 		{
 			if (DrawBETInsertMode(fElapsedTime))
 			{
 				state = BET_MENU;
 			}
 		}
-
-
+		else if (state == BET_TREE)
+		{
+			Clear(olc::BLACK);
+			if (DrawBETree(rootBETnode, ScreenWidth() / 2, 0, ScreenWidth() / 2, 30, ScreenWidth() * 0.20, ScreenHeight() * 0.20) )
+				state = BET_MENU;
+		}
+		else if (state == BET_TRAVERSAL)
+		{
+			if (DrawBETTraversals())
+				state = BET_MENU;
+		}
+	
 		if (GetKey(olc::ESCAPE).bReleased)
 			return false;
 
@@ -366,37 +447,41 @@ public:
 			//closeth path
 			bstTree.getShortestPath(node, this);
 
-			//padre
+			//father
 			nodeptr parent = bstTree.getParentNode(testNode);
 			std::string parentText;
 			
 			if (parent != nullptr) parentText = "PARENT NODE: " + std::to_string(parent->getNodeValue());
 			else parentText = "PARENT NOT FOUND";
 			
-			DrawString(25, 150, parentText);
+			DrawString(25, 200, parentText);
 			
-			//hermano
-			//nodeptr brother = bstTree.getBrotherNode(bstTree.getRoot());
+			//sibling
+			nodeptr brother = bstTree.getBrotherNode(node);
 			
-			//int brotherValue = ( brother != nullptr) ? brother->getNodeValue() : 0;
+			int brotherValue = (brother != nullptr) ? brother->getNodeValue() : 0;
 			
-			//std::string brotherText = "BROTHER OF " + std::to_string(testNode) + " IS " + std::to_string(brotherValue);
-			//
-			//DrawString(25, 175, brotherText);
+			std::string brotherText = "BROTHER OF " + std::to_string(testNode) + " IS " + std::to_string(brotherValue);
+			DrawString(25, 225, brotherText);
 			
 			
-			//hijos y grado(cantidad de hijos)
-			int leftChild =  (node->left != nullptr)  ? node->left->getNodeValue() : 0;
-			int rightChild = (node->right != nullptr) ? node->right->getNodeValue() : 0;
+			//childs y grade(amount of childs)
+			int leftChild  = (node->left  != nullptr)  ? node->left->getNodeValue() : 0;
+			int rightChild = (node->right != nullptr)  ? node->right->getNodeValue() : 0;
 
 			int grade = 0;
 			std::string sonsText = "";
+			std::string gradeText = "";
+
 			if (rightChild != 0 && leftChild != 0) grade = 2;
 			else if ( (rightChild == 0 && leftChild != 0 )  || (leftChild == 0 && rightChild != 0) ) grade = 1;
 			else grade = 0;
-
-			sonsText = "GRADE: "+ std::to_string(grade) + "LEFTCHILD: " + std::to_string(rightChild) + " LEFTCHILD: " + std::to_string(leftChild);
-			DrawString(25, 200, sonsText);
+			
+			gradeText = "GRADE: " + std::to_string(grade);
+			sonsText = " LEFTCHILD: " + std::to_string(rightChild) + " LEFTCHILD: " + std::to_string(leftChild);
+			
+			DrawString(25, 250, gradeText);
+			DrawString(25, 275, sonsText);
 
 		}
 		
@@ -507,33 +592,101 @@ public:
 
 
 		DrawString(10, 20, "PRESS ENTER TO INSERT EXPRESSION: ");
-
-		//NOT WORKING
-		static float keytimer = 0;
 		static std::string testExpression = "";
 
-		if (GetKey(olc::Key::K9).bPressed && GetKey(olc::Key::SHIFT).bHeld)
-			testExpression += '(';
-		else if (GetKey(olc::Key::K0).bPressed && GetKey(olc::Key::SHIFT).bHeld)
-			testExpression += ')';
-
-
-		keytimer += deltaTime;
-		if (keytimer > 0.1)
-		{
-			for (int i = 1; i <= 83; i++) {
-				if (GetKey(olc::Key(i)).bReleased)
-				{
-					testExpression.push_back(olc::Key(i));
-					keytimer = 0;
-				}
-			}
+		static bool reading = true;
 		
+		if (reading)
+		{
+			text.updateField();
+		
+			testExpression = text.getString();
+		
+
+			DrawString(100, 100, testExpression, olc::WHITE);
+		}
+		else 	
+			DrawString(20, 150, "VALID EXPRESSION!");
+		
+			//validate expresion 
+		if (GetKey(olc::Key::ENTER).bReleased && isBalanced(testExpression) )
+		{
+			userInfixExpression = testExpression;//transfer valid expression data
+			reading = false;
 		}
 		
-		std::cout << testExpression << std::endl;
 
-		DrawString(100, 100, testExpression, olc::WHITE);
+		if (GetKey(olc::Key::M).bReleased)
+		{
+			testExpression = "";
+			reading = true;
+
+
+			//preparing for making tree
+			std::string posfix = ConvertToPosfix(userInfixExpression);
+
+			//root node of BET class
+			rootBETnode = ConstructTree(posfix);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	bool DrawBETree(NodeBET* root, int lineFromX, int lineFromY, int x, int y, int incX, int incY)
+	{
+		DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
+
+		if (root->getLeftSubTree() != nullptr)
+			DrawBETree(root->getLeftSubTree(), x, y, x - incX, y + incY, incX * 0.5, incY);
+
+		if (root->getRightSubTree() != nullptr)
+			DrawBETree(root->getRightSubTree(), x, y, x + incX, y + incY, incX * 0.5, incY);
+
+		FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
+
+		if (root->getLeftSubTree() == nullptr && root->getRightSubTree() == nullptr)//LEAF NODE
+		{
+			DrawCircle(x, y, 12, olc::MAGENTA);
+			std::string c = "";
+			DrawString(x - 4, y - 2, c += root->getNodeValue(), olc::WHITE);
+		}
+		else
+		{
+			DrawCircle(x, y, 12, olc::YELLOW);
+			std::string c = "";
+			DrawString(x - 4, y - 2, c += root->getNodeValue(), olc::WHITE);
+		}
+
+		if (GetKey(olc::Key::M).bReleased)
+			return true;
+
+		return false;
+	}
+
+	bool DrawBETTraversals()
+	{
+		Clear(olc::VERY_DARK_BLUE);
+		DrawString(ScreenWidth() / 2 - 100, 25, "TRAVERSALS", olc::WHITE);
+
+		std::string prefixText = "";
+		std::string infixText = "";
+		std::string posfixText = "";
+
+		infixText = userInfixExpression;
+		posfixText = ConvertToPosfix(userInfixExpression);
+		prefixText = ConvertToPrefix(posfixText);
+
+		//output
+		DrawString(25, 50, "PREFIX: " + prefixText, olc::WHITE);
+		DrawString(25, 100, "INFIX: " + infixText, olc::WHITE);
+		DrawString(25, 150, "POSTFIX: " + posfixText, olc::WHITE);
+
+
+
+		if (GetKey(olc::Key::M).bReleased)
+			return true;
 
 		return false;
 	}
