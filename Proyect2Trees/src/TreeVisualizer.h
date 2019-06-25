@@ -330,22 +330,7 @@ public:
 		//choose the node to extract info
 		Clear(olc::VERY_DARK_RED);
 
-		//NOT WORKING
-		//static float keytimer = 0;
-		//const char numLayout[10] = { '0','1','2','3','4','5','6','7','8','9'};
-		//
-		//keytimer += deltaTime;
-		//if (keytimer > 0.1)
-		//{
-		//	for (int i = 69; i <= 78; i++) {
-		//		if (GetKey(olc::Key(i)).bReleased)
-		//		{
-		//			testNode.push_back(numLayout[i - 69]);
-		//			keytimer = 0;
-		//		}
-		//	}
-		//
-		//}
+		//INPUT
 		static int testNode = 0;
 		if (GetKey(olc::Key::K0).bReleased) testNode = testNode * 10 + 0;
 		if (GetKey(olc::Key::K1).bReleased) testNode = testNode * 10 + 1;
@@ -381,42 +366,37 @@ public:
 			//closeth path
 			bstTree.getShortestPath(node, this);
 
+			//padre
+			nodeptr parent = bstTree.getParentNode(testNode);
+			std::string parentText;
+			
+			if (parent != nullptr) parentText = "PARENT NODE: " + std::to_string(parent->getNodeValue());
+			else parentText = "PARENT NOT FOUND";
+			
+			DrawString(25, 150, parentText);
+			
 			//hermano
-			//nodeptr brother = ( bstTree.getBrotherNode(node) != nullptr) ? bstTree.getBrotherNode(node) : 0;
-			//std::string brotherText;
-			//if (brother != 0) brotherText = "BROTHER NODE:" + std::to_string(brother->getNodeValue());
-			//else brotherText = "BROTHER NOT FOUND";
-			//
-			//DrawString(25, 125, brotherText);
-			//
-			////padre
-			//nodeptr parent = bstTree.getParentNode(testNode);
-			//std::string parentText;
-			//
-			//if (parent != nullptr) parentText = "PARENT NODE: " + std::to_string(parent->getNodeValue());
-			//else parentText = "PARENT NOT FOUND";
+			//nodeptr brother = bstTree.getBrotherNode(bstTree.getRoot());
+			
+			//int brotherValue = ( brother != nullptr) ? brother->getNodeValue() : 0;
+			
+			//std::string brotherText = "BROTHER OF " + std::to_string(testNode) + " IS " + std::to_string(brotherValue);
 			//
 			//DrawString(25, 175, brotherText);
-			//
-			////hijos y grado(cantidad de hijos)
-			//nodeptr leftChild = bstTree.getLeftChildNode();
-			//nodeptr rightChild = bstTree.getRightChildNode();
-			//int grade;
-			//std::string sonsText;
-			//if (rightChild != nullptr || leftChild != nullptr) grade = 1;
-			//else if (leftChild != nullptr && rightChild != nullptr)
-			//{
-			//	grade = 2;
-			//	sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: " + std::to_string(leftChild->getNodeValue()) + " RIGHTNODE: " + std::to_string(rightChild->getNodeValue());
-			//}
-			//else
-			//{
-			//	grade = 0;
-			//	sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: NULL RIGHTNODE: NULL";
-			//}
+			
+			
+			//hijos y grado(cantidad de hijos)
+			int leftChild =  (node->left != nullptr)  ? node->left->getNodeValue() : 0;
+			int rightChild = (node->right != nullptr) ? node->right->getNodeValue() : 0;
 
+			int grade = 0;
+			std::string sonsText = "";
+			if (rightChild != 0 && leftChild != 0) grade = 2;
+			else if ( (rightChild == 0 && leftChild != 0 )  || (leftChild == 0 && rightChild != 0) ) grade = 1;
+			else grade = 0;
 
-			//DrawString(25, 200, sonsText);
+			sonsText = "GRADE: "+ std::to_string(grade) + "LEFTCHILD: " + std::to_string(rightChild) + " LEFTCHILD: " + std::to_string(leftChild);
+			DrawString(25, 200, sonsText);
 
 		}
 		

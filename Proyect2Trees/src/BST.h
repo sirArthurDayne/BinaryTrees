@@ -317,7 +317,7 @@ public:
 
 			nodeptrList.pop_back();
 			nodeptrList.shrink_to_fit();
-			y += 25;
+			y += 15;
 		}
 	}
 
@@ -388,21 +388,13 @@ public:
 		return downlevel;
 
 	}
+	
 	//get brother node algorithm (need fixing)
 	nodeptr getBrotherNode(nodeptr root)
 	{	
-		nodeptr parentNode = getParentNode( root->getNodeValue() );
-		//find wich branch are the node caller
 		
-			if (parentNode->getLeftSubTree()->getNodeValue() != root->getNodeValue())
-			{
-				return parentNode->getLeftSubTree();
-			}
+
 		
-			else if (parentNode->getRightSubTree()->getNodeValue() != root->getNodeValue())
-			{
-				return parentNode->getRightSubTree();
-			}
 		
 	}
 
