@@ -357,6 +357,30 @@ public:
 	}
 
 
+	int getLevelNode(nodeptr root, int data, int level = 1)
+	{
+		/* Helper function for getLevel().
+		It returns level of the data if data is
+		present in tree, otherwise returns 0.*/
+
+		//if node doesnt exits
+		if (root == nullptr)
+			return 0;
+
+		//if node is found
+		if (root->getNodeValue() == data)
+			return level;
+
+		int downlevel = getLevelNode(root->getLeftSubTree(), data, level + 1);
+		
+		if (downlevel != 0)
+			return downlevel;
+
+		downlevel = getLevelNode(root->getRightSubTree(), data, level + 1);
+
+		return downlevel;
+
+	}
 	//get brother node algorithm (need fixing)
 	nodeptr getBrotherNode(nodeptr root)
 	{	
@@ -437,7 +461,7 @@ public:
 	{
 		if (root != nullptr && root->getLeftSubTree() != nullptr)
 			PostOrder(root->getLeftSubTree(), container);
-		if (root != nullptr && root->getLeftSubTree() != nullptr)
+		if (root != nullptr && root->getRightSubTree() != nullptr)
 			PostOrder(root->getRightSubTree(), container);
 		
 		if (root != nullptr)//process

@@ -11,7 +11,7 @@ BST bstTree(rootBSTnode);
 
 //state machine
 enum STATES {
-	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO, BST_TRAVERSAL
+	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO, BST_TRAVERSAL, BET_INSERT_MODE, BET_TREE, BET_TRAVERSAL
 };
 
 /////////////////////////////////// THIS IS FOR ALL THE STUFF YOU NORMALY DO IN THE PGE.... /////////////////////////////////
@@ -49,21 +49,22 @@ public:
 	{
 		Clear(olc::VERY_DARK_BLUE);
 
-		//init
+		//init 0
 		if (state == MAIN_MENU)
 			DrawMainMenu();
-		//option1
+		
+		//1
 		else if (state == BST_MENU)
 			DrawBstMenu();
 		
 		else if (state == BST_INSERT_MODE)//1.1
 		{
-			if (InsertNodeMode(fElapsedTime))
+			if (DrawInsertMode(fElapsedTime))
 				state = BST_MENU;
 		}
 		else if (state == BST_DELETE_MODE)//1.2
 		{
-			if (DeleteNodeMode(fElapsedTime))
+			if (DrawDeleteBstNode(fElapsedTime))
 				state = BST_MENU;
 		}
 		else if (state == BST_TREE)//1.3
@@ -82,14 +83,24 @@ public:
 			if (DrawBSTreeInfo())
 				state = BST_MENU;
 		}
-		else if (state == BST_TRAVERSAL)
+		else if (state == BST_TRAVERSAL)//1.6
 		{
 			if (DrawBstTraversalls())
 				state = BST_MENU;
 		}
-		//option2
+		
+		//2
 		else if (state == BET_MENU)
 			DrawBetMenu();
+
+		else if (state == BET_INSERT_MODE)
+		{
+			if (DrawBETInsertMode(fElapsedTime))
+			{
+				state = BET_MENU;
+			}
+		}
+
 
 		if (GetKey(olc::ESCAPE).bReleased)
 			return false;
@@ -126,27 +137,43 @@ public:
 		Clear(olc::VERY_DARK_GREEN);
 
 
-		int option = 1;
-		if (option > 6 || option < 1) option = 1;
+		if (betMenuOption > 3 || betMenuOption < 1) betMenuOption = 1;
 
-		if (GetKey(olc::Key::UP).bPressed)
-			option++;
-		else if (GetKey(olc::Key::DOWN).bPressed)
-			option--;
+		//keys input
+		if (GetKey(olc::Key::UP).bPressed) betMenuOption--;
+		else if (GetKey(olc::Key::DOWN).bPressed) betMenuOption++;
 
-		FillRect(ScreenWidth() / 2 - 100, 20 + (16 * ((option - 1) / 2)), 200, 11, olc::VERY_DARK_GREY);
-		DrawRect(ScreenWidth() / 2 - 100, 20 + (16 * ((option - 1) / 2)), 200, 11, olc::WHITE);
+		//mouse input
+		int mouseX = GetMouseX();
+		int mouseY = GetMouseY() / 20 + 20;
+		std::cout << "mouseX:" << mouseX << "mouseY" << mouseY << std::endl;
 
+		if		(mouseX > 250 && mouseX < 350 && mouseY == 20) betMenuOption = 1;
+		else if (mouseX > 250 && mouseX < 350 && mouseY == 21) betMenuOption = 2;
+		else if (mouseX > 250 && mouseX < 350 && mouseY == 22) betMenuOption = 3;
 
+		//selected
+		FillRect(ScreenWidth() / 2 - 100, 20 * betMenuOption, 200, 11, olc::VERY_DARK_GREY);
+		DrawRect(ScreenWidth() / 2 - 100, 20 * betMenuOption, 200, 11, olc::WHITE);
+
+		//button text
 		DrawString(ScreenWidth() / 2 - 100, 20, "1. Insert Expression", olc::WHITE);
 		DrawString(ScreenWidth() / 2 - 100, 40, "2. See Tree ", olc::WHITE);
 		DrawString(ScreenWidth() / 2 - 100, 60, "3. Traversal:", olc::WHITE);
-		DrawString(ScreenWidth() / 2 - 100, 80, "  3.1 PREORDER", olc::WHITE);
-		DrawString(ScreenWidth() / 2 - 100, 100, "  3.2 INORDER", olc::WHITE);
-		DrawString(ScreenWidth() / 2 - 100, 120, "  3.3 POSTORDER", olc::WHITE);
+		
 
+		//option selected
+		if (GetMouse(0).bReleased || GetKey(olc::Key::ENTER).bReleased)//choose
+		{
+			if (betMenuOption == 1)
+				state = BET_INSERT_MODE;
+			else if (betMenuOption == 2)
+				state = BET_TREE;
+			else if (betMenuOption == 3)
+				state = BET_TRAVERSAL;
+		}
 
-
+		//exit
 		if (GetKey(olc::Key::M).bReleased)
 			state = MAIN_MENU;
 	}
@@ -173,6 +200,7 @@ public:
 			else if (mouseX > 250 && mouseX < 350 && mouseY == 24 ) bstMenuOption = 5;
 			else if (mouseX > 250 && mouseX < 350 && mouseY == 25 ) bstMenuOption = 6;
 		
+			//selected text
 			FillRect(ScreenWidth()/2 -100, (20 * bstMenuOption), 200, 11, olc::VERY_DARK_GREY);
 			DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
 
@@ -187,7 +215,7 @@ public:
 		DrawString(ScreenWidth() /2+ 100 , ScreenHeight() - 25, "Press M to MainMenu", olc::WHITE);
 
 
-		
+		//option selected
 		if (GetMouse(0).bReleased || GetKey(olc::Key::ENTER).bReleased)//choose
 		{
 			if (bstMenuOption == 1)
@@ -204,15 +232,18 @@ public:
 				state = BST_TRAVERSAL;
 		}
 		
-	
+		//exit
 		if (GetKey(olc::Key::M).bReleased)
 		{
 			state = MAIN_MENU;
 			bstMenuOption = 1;
 		}
 	}
+	
+	
+	//BST DRAW FUNCTIONS
 
-	bool InsertNodeMode(float deltaTime)
+	bool DrawInsertMode(float deltaTime)
 	{
 		Clear(olc::VERY_DARK_CYAN);
 		
@@ -258,7 +289,7 @@ public:
 		return false;
 	}
 
-	bool DeleteNodeMode(float deltaTime)//NOT COMPLETED
+	bool DrawDeleteBstNode(float deltaTime)//NOT COMPLETED
 	{
 		Clear(olc::VERY_DARK_BLUE);
 
@@ -338,47 +369,52 @@ public:
 		if (printInfo)
 		{
 			nodeptr node = bstTree.Search(testNode);
+
+			//level
+			std::string level = "LEVEL: " + std::to_string( bstTree.getLevelNode( bstTree.getRoot(), testNode) );
+			DrawString( 25, 75, level);
+
 			//length to get there
 			std::string lenght = "LENGHT: " + std::to_string( bstTree.LenghtOfaNode( testNode  ));
 			DrawString( 25, 100, lenght);
 			//closeth path
 
 			//hermano
-			nodeptr brother = ( bstTree.getBrotherNode(node) != nullptr) ? bstTree.getBrotherNode(node) : 0;
-			std::string brotherText;
-			if (brother != 0) brotherText = "BROTHER NODE:" + std::to_string(brother->getNodeValue());
-			else brotherText = "BROTHER NOT FOUND";
+			//nodeptr brother = ( bstTree.getBrotherNode(node) != nullptr) ? bstTree.getBrotherNode(node) : 0;
+			//std::string brotherText;
+			//if (brother != 0) brotherText = "BROTHER NODE:" + std::to_string(brother->getNodeValue());
+			//else brotherText = "BROTHER NOT FOUND";
+			//
+			//DrawString(25, 125, brotherText);
+			//
+			////padre
+			//nodeptr parent = bstTree.getParentNode(testNode);
+			//std::string parentText;
+			//
+			//if (parent != nullptr) parentText = "PARENT NODE: " + std::to_string(parent->getNodeValue());
+			//else parentText = "PARENT NOT FOUND";
+			//
+			//DrawString(25, 175, brotherText);
+			//
+			////hijos y grado(cantidad de hijos)
+			//nodeptr leftChild = bstTree.getLeftChildNode();
+			//nodeptr rightChild = bstTree.getRightChildNode();
+			//int grade;
+			//std::string sonsText;
+			//if (rightChild != nullptr || leftChild != nullptr) grade = 1;
+			//else if (leftChild != nullptr && rightChild != nullptr)
+			//{
+			//	grade = 2;
+			//	sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: " + std::to_string(leftChild->getNodeValue()) + " RIGHTNODE: " + std::to_string(rightChild->getNodeValue());
+			//}
+			//else
+			//{
+			//	grade = 0;
+			//	sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: NULL RIGHTNODE: NULL";
+			//}
 
-			DrawString(25, 125, brotherText);
-			
-			//padre
-			nodeptr parent = bstTree.getParentNode(testNode);
-			std::string parentText;
-			
-			if (parent != nullptr) parentText = "PARENT NODE: " + std::to_string(parent->getNodeValue());
-			else parentText = "PARENT NOT FOUND";
-			
-			DrawString(25, 175, brotherText);
-			
-			//hijos y grado(cantidad de hijos)
-			nodeptr leftChild = bstTree.getLeftChildNode();
-			nodeptr rightChild = bstTree.getRightChildNode();
-			int grade;
-			std::string sonsText;
-			if (rightChild != nullptr || leftChild != nullptr) grade = 1;
-			else if (leftChild != nullptr && rightChild != nullptr)
-			{
-				grade = 2;
-				sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: " + std::to_string(leftChild->getNodeValue()) + " RIGHTNODE: " + std::to_string(rightChild->getNodeValue());
-			}
-			else
-			{
-				grade = 0;
-				sonsText = "GRADE OF NODE: " + std::to_string(grade) + "  LEFTNODE: NULL RIGHTNODE: NULL";
-			}
 
-
-			DrawString(25, 200, sonsText);
+			//DrawString(25, 200, sonsText);
 
 		}
 		
@@ -480,6 +516,46 @@ public:
 
 		return false;
 	}
+
+
+	//BET DRAW FUNCTIONS
+	bool DrawBETInsertMode(float deltaTime)
+	{
+		Clear(olc::DARK_GREEN);
+
+
+		DrawString(10, 20, "PRESS ENTER TO INSERT EXPRESSION: ");
+
+		//NOT WORKING
+		static float keytimer = 0;
+		static std::string testExpression = "";
+
+		if (GetKey(olc::Key::K9).bPressed && GetKey(olc::Key::SHIFT).bHeld)
+			testExpression += '(';
+		else if (GetKey(olc::Key::K0).bPressed && GetKey(olc::Key::SHIFT).bHeld)
+			testExpression += ')';
+
+
+		keytimer += deltaTime;
+		if (keytimer > 0.1)
+		{
+			for (int i = 1; i <= 83; i++) {
+				if (GetKey(olc::Key(i)).bReleased)
+				{
+					testExpression.push_back(olc::Key(i));
+					keytimer = 0;
+				}
+			}
+		
+		}
+		
+		std::cout << testExpression << std::endl;
+
+		DrawString(100, 100, testExpression, olc::WHITE);
+
+		return false;
+	}
+
 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
