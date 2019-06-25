@@ -146,7 +146,7 @@ public:
 		//mouse input
 		int mouseX = GetMouseX();
 		int mouseY = GetMouseY() / 20 + 20;
-		std::cout << "mouseX:" << mouseX << "mouseY" << mouseY << std::endl;
+		
 
 		if		(mouseX > 250 && mouseX < 350 && mouseY == 20) betMenuOption = 1;
 		else if (mouseX > 250 && mouseX < 350 && mouseY == 21) betMenuOption = 2;
@@ -191,7 +191,7 @@ public:
 		
 			int mouseX = GetMouseX();
 			int mouseY = GetMouseY() / 20 + 20;
-			std::cout << "mouseX:" << mouseX << "mouseY" << mouseY << std::endl;
+			
 
 			if		(mouseX > 250 && mouseX < 350 && mouseY == 20 ) bstMenuOption = 1;
 			else if (mouseX > 250 && mouseX < 350 && mouseY == 21 ) bstMenuOption = 2;
@@ -377,7 +377,9 @@ public:
 			//length to get there
 			std::string lenght = "LENGHT: " + std::to_string( bstTree.LenghtOfaNode( testNode  ));
 			DrawString( 25, 100, lenght);
+			
 			//closeth path
+			bstTree.getShortestPath(node, this);
 
 			//hermano
 			//nodeptr brother = ( bstTree.getBrotherNode(node) != nullptr) ? bstTree.getBrotherNode(node) : 0;

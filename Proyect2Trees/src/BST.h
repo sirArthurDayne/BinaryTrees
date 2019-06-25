@@ -291,7 +291,7 @@ public:
 	return a;
 }
 
-	void getShortestPath(nodeptr root)
+	void getShortestPath(nodeptr root, olc::PixelGameEngine* pge)
 	{
 		//find path
 		std::vector<nodeptr> nodeptrList;
@@ -300,17 +300,24 @@ public:
 		bool search = true;
 		while (search) 
 		{
-			if (nodeptrList.back() == m_root) search = false;
+			if (nodeptrList.back() == m_root)
+				search = false;
 			else 
 				nodeptrList.push_back( getParentNode( nodeptrList.back()->getNodeValue() ) );
 		}
 
 		//print path
+		int x = 25;
+		int y = 125;
 		while (nodeptrList.size() > 1) 
 		{
-			std::cout << "from node " << nodeptrList.at( nodeptrList.size() -1 )->getNodeValue() << " to node " << nodeptrList.back()->getNodeValue() << std::endl;
+			std::string pathText = "FROM NODE " + std::to_string(nodeptrList.back()->getNodeValue()) + " TO NODE " + std::to_string(nodeptrList.at(nodeptrList.size() - 2)->getNodeValue());
+
+			pge->DrawString(x, y, pathText, olc::RED);
+
 			nodeptrList.pop_back();
 			nodeptrList.shrink_to_fit();
+			y += 25;
 		}
 	}
 
