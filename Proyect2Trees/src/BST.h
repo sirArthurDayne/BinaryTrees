@@ -390,21 +390,21 @@ public:
 	}
 	
 	//get brother node algorithm (need fixing)
-	nodeptr getBrotherNode(nodeptr root)
+	nodeptr getBrotherNode(nodeptr node)
 	{	
-		nodeptr parent = getParentNode( root->getNodeValue() );
+		nodeptr parent = getParentNode( node->getNodeValue() );
 
 		if (parent != nullptr)
 		{
-			nodeptr leftBro = parent->left;
-			nodeptr rightBro = parent->right;
+			nodeptr parentleftChild = parent->left;
+			nodeptr parentRightChild = parent->right;
 		
-			if (leftBro != nullptr || rightBro != nullptr)
+			if (parentleftChild != nullptr || parentRightChild != nullptr)
 			{
-				if (leftBro->getNodeValue() != root->letter && rightBro->getNodeValue() == root->letter)
-					return leftBro;
-				else if (leftBro->getNodeValue() == root->letter && rightBro->getNodeValue() != root->letter)
-					return rightBro;
+				if (parentleftChild->getNodeValue() != node->letter && parentRightChild->getNodeValue() == node->letter)
+					return parentleftChild;
+				else if (parentleftChild->getNodeValue() == node->letter && parentRightChild->getNodeValue() != node->letter)
+					return parentRightChild;
 			}
 			else return nullptr;
 			

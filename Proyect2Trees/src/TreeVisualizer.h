@@ -75,7 +75,7 @@ public:
 
 //state machine
 enum STATES {
-	MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO, BST_TRAVERSAL, BET_INSERT_MODE, BET_TREE, BET_TRAVERSAL
+	PRESENTATION, MAIN_MENU, BST_MENU, BST_INSERT_MODE, BST_DELETE_MODE, BST_TREE, BET_MENU, NODE_INFO, TREE_INFO, BST_TRAVERSAL, BET_INSERT_MODE, BET_TREE, BET_TRAVERSAL
 };
 
 
@@ -109,7 +109,7 @@ public:
 public:
 	bool OnUserCreate() override
 	{
-		state = MAIN_MENU;//setup default state
+		state = PRESENTATION;//setup default state
 		//setup menus
 		bstMenuOption = 1;
 		betMenuOption = 1;
@@ -120,8 +120,10 @@ public:
 	{
 		Clear(olc::VERY_DARK_BLUE);
 
+		if (state == PRESENTATION)
+			DrawPresentation();
 		//init 0
-		if (state == MAIN_MENU)
+		else if (state == MAIN_MENU)
 			DrawMainMenu();
 		
 		///////1. BST STATES///////
@@ -189,15 +191,38 @@ public:
 		return true;
 	}
 	
+
+	//MENUS 
+	void DrawPresentation()
+	{
+		Clear(olc::BLACK);
+
+		DrawString(ScreenWidth()/2 - 150, 50, "UNIVERSIDAD TECNOLOGICA DE PANAMA");
+		DrawString(ScreenWidth()/2 - 220, 60, "FACULTAD DE INGENIERIA DE SISTEMAS COMPUTACIONALES");
+		DrawString(ScreenWidth()/2 - 220, 100, "DEPARTAMENTO DE LICENCIATURA EN INGENIERIA DE SOFTWARE");
+		DrawString(ScreenWidth()/2 - 180, 130, "ESTRUCTURA Y REPRESENTACION DE DATOS 1");
+
+		DrawString(ScreenWidth()/2 - 90, 160, "PROYECTO 2: ARBOLES");
+		DrawString(ScreenWidth()/2 - 120, 200, "PROF.: NICHOLAS BELIZ OSORIO");
+		
+		DrawString(ScreenWidth()/2 - 80, 250, "INTEGRANTES: ");
+		DrawString(ScreenWidth()/2 - 100, 300, "XAVIER LAMELA (SIR_ARTHUR_DAYNE) ");
+		DrawString(ScreenWidth()/2 - 100, 330, "CLYDE 'LA VOZ' HARBIN ");
+		DrawString(ScreenWidth()/2 - 100, 360, "LUIS 'DEMENTOR' CHAVEZ ");
+
+		if (GetMouse(0).bPressed)
+			state = MAIN_MENU;
+	}
+
 	void DrawMainMenu()
 	{
-		DrawString(ScreenWidth() /2 - 100, 20, "BINARY TREES PROYECT 2");
+		DrawString(ScreenWidth() /2 - 100, 20, "PROYECTO 2: ARBOLES");
 		
-		FillRect(ScreenWidth() / 2 - 100, 90, 200, 20, olc::DARK_RED);
-		DrawString(ScreenWidth() /2 - 100 , 100, "1. BINARY SEARCH TREE");
+		FillRect(ScreenWidth() / 2 - 100, 90, 230, 20, olc::DARK_RED);
+		DrawString(ScreenWidth() /2 - 100 , 100, "1. ARBOL BINARIO DE BUSQUEDA");
 		
-		FillRect(ScreenWidth() / 2 - 100, 140, 200, 20, olc::DARK_GREEN);
-		DrawString(ScreenWidth() /2 - 100 , 150, "2. BINARY EXPRESSION TREE");
+		FillRect(ScreenWidth() / 2 - 100, 140, 230, 20, olc::DARK_GREEN);
+		DrawString(ScreenWidth() /2 - 100 , 150, "2. ARBOL BINARIO DE EXPRESION");
 
 		if (GetMouse(0).bReleased)
 		{
