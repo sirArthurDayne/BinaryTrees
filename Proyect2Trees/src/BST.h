@@ -14,8 +14,6 @@ public:
 	struct Node* left;
 	struct Node* right;
 
-public:
-	
 	Node(int data)
 	{
 		letter = data;
@@ -119,8 +117,6 @@ public:
 		else      
 			return 1 + NodesAmount(root->getLeftSubTree()) + NodesAmount(root->getRightSubTree()); 
 	}
-
-
 
 	bool IsComplete(nodeptr root)
 	{
@@ -270,6 +266,12 @@ public:
 		and it continues down the right branches (major keys) until reaching the node that does not have a right branch. 
 		This is the largest of the minors, whose data must replace the node to be deleted. 
 		What you do is copy the value of the data and link your father with the left child.
+
+		Como las claves menores están en la rama izquierda, se baja al primer nodo de la rama izquierda, 
+		y se continúa bajando por las ramas derecha (claves mayores) hasta alcanzar el nodo que no tiene rama derecha. 
+		Éste es el mayor de los menores, cuyo dato debe reemplazar al del nodo a eliminar. 
+		Lo que se hace es copiar el valor del dato y enlazar su padre con el hijo izquierdo. 
+
 	*/
 	nodeptr a, p;
 	p = changeNode;
@@ -535,12 +537,7 @@ public:
 
 };
 
-//class BET
-//{
-//	
-//
-//};
-//
+
 bool isLetter(char c)
 {
 	std::string list = "1234567890qwertyuiopasdfghjklzxcvbnm+-/*^";
@@ -722,6 +719,7 @@ std::string ConvertToPrefix(std::string postExpression)
 	return stack.top();
 }
 
+//most important function
 NodeBET* ConstructTree(std::string postfix)
 {
 	std::stack<NodeBET*> stack;

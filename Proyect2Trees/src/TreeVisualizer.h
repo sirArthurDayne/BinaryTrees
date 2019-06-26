@@ -2,6 +2,7 @@
 #include"BST.h"
 
 static int screenW = 640, screenH = 480;
+//static int screenW = 1080, screenH = 720;
 
 //Nodes class objects
 NodeBET* rootBETnode;
