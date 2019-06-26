@@ -131,7 +131,6 @@ public:
 			if (HeightTree(root->getLeftSubTree()) != HeightTree(root->getRightSubTree()))
 				return false;
 		}
-		//black box
 		return IsComplete(root->getLeftSubTree()) && IsComplete(root->getRightSubTree());
 	}
 
@@ -255,6 +254,7 @@ public:
 		{
 			//to keep structure, replace the node data with the largest of the minor keys in the subtree
 			deleteNode = ReplaceNode(deleteNode);
+	
 		}
 		//after done proccess of finding and setting nodes, we delete all data inside that node
 		deleteNode = nullptr;
@@ -463,7 +463,7 @@ public:
 
 	void PreOrder(nodeptr root, std::string& container)
 	{
-
+		//RAIZ - IZQ - DERECHA
 		if (root != nullptr)//proccess 
 			container += std::to_string(root->getNodeValue()) + " - ";
 		
@@ -476,6 +476,7 @@ public:
 	
 	void InOrder(nodeptr root, std::string& container)
 	{
+		//IZQ - RAIZ -DERECHA
 		if (root != nullptr && root->getLeftSubTree() != nullptr)//left branch
 			InOrder(root->getLeftSubTree(), container);
 		
@@ -489,6 +490,7 @@ public:
 
 	void PostOrder(nodeptr root, std::string& container)
 	{
+		//IZQ - DER- RAIZ
 		if (root != nullptr && root->getLeftSubTree() != nullptr)
 			PostOrder(root->getLeftSubTree(), container);
 		if (root != nullptr && root->getRightSubTree() != nullptr)

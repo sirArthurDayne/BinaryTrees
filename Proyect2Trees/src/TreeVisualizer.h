@@ -102,8 +102,6 @@ private:
 public:
 	TreeVisualizer()
 	{
-		
-		
 		sAppName = "Proyect 2 Binary Trees";
 	}
 public:
@@ -206,9 +204,11 @@ public:
 		DrawString(ScreenWidth()/2 - 120, 200, "PROF.: NICHOLAS BELIZ OSORIO");
 		
 		DrawString(ScreenWidth()/2 - 80, 250, "INTEGRANTES: ");
-		DrawString(ScreenWidth()/2 - 100, 300, "XAVIER LAMELA (SIR_ARTHUR_DAYNE) ");
-		DrawString(ScreenWidth()/2 - 100, 330, "CLYDE 'LA VOZ' HARBIN ");
-		DrawString(ScreenWidth()/2 - 100, 360, "LUIS 'DEMENTOR' CHAVEZ ");
+		DrawString(ScreenWidth()/2 - 100, 300, "LAMELA, XAVIER 8-956-720 ");
+		DrawString(ScreenWidth()/2 - 100, 330, "HARBIN, CLYDE 8-927-1305 ");
+		DrawString(ScreenWidth()/2 - 100, 360, "CHAVEZ, LUIS 8-947-1001");
+
+		DrawString(ScreenWidth() / 2 - 65, ScreenHeight() - 50, "I SEMESTRE 2019");
 
 		if (GetMouse(0).bPressed)
 			state = MAIN_MENU;
@@ -263,9 +263,9 @@ public:
 		DrawRect(ScreenWidth() / 2 - 100, 20 * betMenuOption, 200, 11, olc::WHITE);
 
 		//button text
-		DrawString(ScreenWidth() / 2 - 100, 20, "1. Insert Expression", olc::WHITE);
-		DrawString(ScreenWidth() / 2 - 100, 40, "2. See Tree ", olc::WHITE);
-		DrawString(ScreenWidth() / 2 - 100, 60, "3. Traversal:", olc::WHITE);
+		DrawString(ScreenWidth() / 2 - 100, 20, "1. INSERTAR EXPRESION", olc::WHITE);
+		DrawString(ScreenWidth() / 2 - 100, 40, "2. VER ARBOL ", olc::WHITE);
+		DrawString(ScreenWidth() / 2 - 100, 60, "3. RECORRIDOS:", olc::WHITE);
 		
 
 		//option selected
@@ -311,14 +311,14 @@ public:
 			DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
 
 		//button text
-		DrawString(ScreenWidth() /2- 100, 20, "1. Insert Node to tree", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 40, "2. Delete Node from tree", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 60, "3. See Tree ", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 80, "4. Info about a node", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 100, "5. Info about tree ", olc::WHITE);
-		DrawString(ScreenWidth() /2- 100, 120, "6. Traversal:", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 20, "1. INSERTAR NODO EN ARBOL", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 40, "2. BORRAR NODO DEL ARBOL", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 60, "3. VER ARBOL ", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 80, "4. INFORMACION DE UN NODO", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 100, "5. INFORMACION DEL ARBOL ", olc::WHITE);
+		DrawString(ScreenWidth() /2- 100, 120, "6. RECORRIDOS:", olc::WHITE);
 
-		DrawString(ScreenWidth() /2+ 100 , ScreenHeight() - 25, "Press M to MainMenu", olc::WHITE);
+		DrawString(ScreenWidth() /2+ 100 , ScreenHeight() - 25, "PRESIONA 'M' PARA MENU", olc::WHITE);
 
 
 		//option selected
@@ -353,7 +353,7 @@ public:
 	{
 		Clear(olc::VERY_DARK_CYAN);
 		
-		DrawString(10, 20, "PRESS ENTER TO INSERT: ");
+		DrawString(10, 20, "PRESIONA 'ENTER' PARA INSERTAR: ");
 		static int number = 0;
 
 		if (GetKey(olc::Key::K0).bReleased) number = number * 10 + 0;
@@ -368,7 +368,7 @@ public:
 		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
 		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
 
-		DrawString(10, 100, "INSERTING NUMBER: " + std::to_string(number), olc::RED);
+		DrawString(10, 100, "INSERTANDO NUMERO: " + std::to_string(number), olc::RED);
 		if (GetKey(olc::Key::ENTER).bReleased)
 		{
 			userNumberList.push_back(number);
@@ -376,7 +376,7 @@ public:
 		}
 		
 		//draw list
-		DrawString(20, 50, "NODES LIST(START FROM ROOT):");
+		DrawString(20, 50, "LISTA DE NODOS(EMPIEZA EN RAIZ):");
 		
 		for(int i = 0; i < userNumberList.size(); i++)
 		DrawString(300, 50 + (i * 10), std::to_string(userNumberList.at(i)));
@@ -399,7 +399,7 @@ public:
 	{
 		Clear(olc::VERY_DARK_BLUE);
 
-		DrawString(10, 20, "PRESS ENTER TO DELETE: ");
+		DrawString(10, 20, "PRESIONA 'ENTER' PARA BORRAR: ");
 		static int number = 0;
 
 		if (GetKey(olc::Key::K0).bReleased) number = number * 10 + 0;
@@ -414,7 +414,7 @@ public:
 		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
 		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
 
-		DrawString(10, 50, "DELETING NUMBER: " + std::to_string(number), olc::RED);
+		DrawString(10, 50, "BORRANDO NUMERO: " + std::to_string(number), olc::RED);
 		if (GetKey(olc::Key::ENTER).bReleased)
 		{
 			bstTree.EliminateNode(number);
@@ -503,7 +503,7 @@ public:
 			else grade = 0;
 			
 			gradeText = "GRADE: " + std::to_string(grade);
-			sonsText = " LEFTCHILD: " + std::to_string(rightChild) + " LEFTCHILD: " + std::to_string(leftChild);
+			sonsText = " RIGHTCHILD: " + std::to_string(rightChild) + " LEFTCHILD: " + std::to_string(leftChild);
 			
 			DrawString(25, 250, gradeText);
 			DrawString(25, 275, sonsText);
@@ -555,7 +555,7 @@ public:
 	{
 		//title
 		Clear(olc::VERY_DARK_GREY);
-		DrawString(ScreenWidth()/2 - 100, 25, "BINARY TREE INFO", olc::WHITE);
+		DrawString(ScreenWidth()/2 - 100, 25, "INFORMACION DEL ARBOL BINARIO", olc::WHITE);
 		
 		//calculations
 		nodeptr root = bstTree.getRoot();
@@ -564,10 +564,10 @@ public:
 		int leafNodes	 = bstTree.getLeafNodesAmount(root);
 		bool isComplete  = bstTree.IsComplete(root);
 
-		std::string heighText    = "HEIGHT OF THE TREE: " + std::to_string(heightofTree);
-		std::string totalText    = "TOTAL OF NODES IN TREE: " + std::to_string(totalNodes);
-		std::string amountText   = "AMOUNT OF LEAFS NODES: " + std::to_string(leafNodes);
-		std::string completeText = (isComplete) ? "IS COMPLETE?: YES" : "IS COMPLETE?: NO";
+		std::string heighText    = "ALTURA DEL ARBOL: " + std::to_string(heightofTree);
+		std::string totalText    = "NODOS TOTALES: " + std::to_string(totalNodes);
+		std::string amountText   = "CANTIDAD DE NODOS HOJA: " + std::to_string(leafNodes);
+		std::string completeText = (isComplete) ? "ESTA COMPLETO?: SI" : "ESTA COMPLETO?: NO";
 		
 		//output
 		DrawString(ScreenWidth() - 450, 50, heighText, olc::WHITE);
@@ -585,14 +585,14 @@ public:
 	{
 		//title
 		Clear(olc::VERY_DARK_GREEN);
-		DrawString(ScreenWidth() / 2 - 100, 25, "TRAVERSALS", olc::WHITE);
+		DrawString(ScreenWidth() / 2 - 100, 25, "RECORRIDOS", olc::WHITE);
 
 		//calculations
 		nodeptr root = bstTree.getRoot();
 		
-		std::string preorderText = "PREORDER: ";
-		std::string inorderText = "INORDER: ";
-		std::string postorderText = "POSTORDER: ";
+		std::string preorderText = "PREORDEN: ";
+		std::string inorderText = "INORDEN: ";
+		std::string postorderText = "POSTORDEN: ";
 		
 		bstTree.PreOrder(root, preorderText);
 		bstTree.InOrder(root, inorderText);
@@ -616,7 +616,7 @@ public:
 		Clear(olc::DARK_GREEN);
 
 
-		DrawString(10, 20, "PRESS ENTER TO INSERT EXPRESSION: ");
+		DrawString(10, 20, "PRESIONA 'ENTER' PARA INGRESAR EXPRESION: ");
 		static std::string testExpression = "";
 
 		static bool reading = true;
@@ -631,7 +631,7 @@ public:
 			DrawString(100, 100, testExpression, olc::WHITE);
 		}
 		else 	
-			DrawString(20, 150, "VALID EXPRESSION!");
+			DrawString(20, 150, "EXPRESION VALIDA!");
 		
 			//validate expresion 
 		if (GetKey(olc::Key::ENTER).bReleased && isBalanced(testExpression) )
@@ -693,7 +693,7 @@ public:
 	bool DrawBETTraversals()
 	{
 		Clear(olc::VERY_DARK_BLUE);
-		DrawString(ScreenWidth() / 2 - 100, 25, "TRAVERSALS", olc::WHITE);
+		DrawString(ScreenWidth() / 2 - 100, 25, "RECORRIDOS", olc::WHITE);
 
 		std::string prefixText = "";
 		std::string infixText = "";
@@ -704,9 +704,9 @@ public:
 		prefixText = ConvertToPrefix(posfixText);
 
 		//output
-		DrawString(25, 50, "PREFIX: " + prefixText, olc::WHITE);
-		DrawString(25, 100, "INFIX: " + infixText, olc::WHITE);
-		DrawString(25, 150, "POSTFIX: " + posfixText, olc::WHITE);
+		DrawString(25, 50, "PREFIJO: " + prefixText, olc::WHITE);
+		DrawString(25, 100, "INFIJO: " + infixText, olc::WHITE);
+		DrawString(25, 150, "POSTFIJO: " + posfixText, olc::WHITE);
 
 
 
