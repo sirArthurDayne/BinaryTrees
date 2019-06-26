@@ -389,7 +389,7 @@ public:
 
 	}
 	
-	//get brother node algorithm (need fixing)
+	//TESTING
 	nodeptr getBrotherNode(nodeptr node)
 	{	
 		nodeptr parent = getParentNode( node->getNodeValue() );
@@ -399,14 +399,27 @@ public:
 			nodeptr parentleftChild = parent->left;
 			nodeptr parentRightChild = parent->right;
 		
-			if (parentleftChild != nullptr || parentRightChild != nullptr)
+			if (parentleftChild != nullptr && parentRightChild == nullptr)//solo el izq
+			{
+				if (parentleftChild->getNodeValue() != node->letter)
+					return parentleftChild;
+				else
+					return nullptr;//porque encontro el mismo nodo q llamo la funcion
+			}
+			else if (parentleftChild == nullptr && parentRightChild != nullptr)//solo el derecho
+			{
+				if (parentRightChild->getNodeValue() != node->letter)
+					return parentRightChild;
+				else
+					return nullptr;//porque encontro el mismo nodo q llamo la funcion osea no tiene hermano
+			}
+			else if (parentleftChild != nullptr && parentRightChild != nullptr)//ambos hijos
 			{
 				if (parentleftChild->getNodeValue() != node->letter && parentRightChild->getNodeValue() == node->letter)
 					return parentleftChild;
 				else if (parentleftChild->getNodeValue() == node->letter && parentRightChild->getNodeValue() != node->letter)
 					return parentRightChild;
 			}
-			else return nullptr;
 			
 		}
 		else
