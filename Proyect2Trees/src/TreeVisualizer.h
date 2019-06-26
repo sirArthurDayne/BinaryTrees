@@ -200,7 +200,7 @@ public:
 		DrawString(ScreenWidth()/2 - 220, 100, "DEPARTAMENTO DE LICENCIATURA EN INGENIERIA DE SOFTWARE");
 		DrawString(ScreenWidth()/2 - 180, 130, "ESTRUCTURA Y REPRESENTACION DE DATOS 1");
 
-		DrawString(ScreenWidth()/2 - 90, 160, "PROYECTO 2: ARBOLES");
+		DrawString(ScreenWidth()/2 - 90, 160, "PROYECTO II: ARBOLES");
 		DrawString(ScreenWidth()/2 - 120, 200, "PROF.: NICHOLAS BELIZ OSORIO");
 		
 		DrawString(ScreenWidth()/2 - 80, 250, "INTEGRANTES: ");
@@ -216,14 +216,21 @@ public:
 
 	void DrawMainMenu()
 	{
-		DrawString(ScreenWidth() /2 - 100, 20, "PROYECTO 2: ARBOLES");
+		DrawString(ScreenWidth() /2 - 50, 20, "PROYECTO II");
 		
 		FillRect(ScreenWidth() / 2 - 100, 90, 230, 20, olc::DARK_RED);
-		DrawString(ScreenWidth() /2 - 100 , 100, "1. ARBOL BINARIO DE BUSQUEDA");
+		DrawString(ScreenWidth() /2 - 100 , 100, "1. ARBOL BINARIO GENERAL");
 		
 		FillRect(ScreenWidth() / 2 - 100, 140, 230, 20, olc::DARK_GREEN);
 		DrawString(ScreenWidth() /2 - 100 , 150, "2. ARBOL BINARIO DE EXPRESION");
 
+		DrawString(ScreenWidth() / 2 - 80, 250, "INTEGRANTES: ");
+		DrawString(ScreenWidth() / 2 - 100, 300, "LAMELA, XAVIER 8-956-720 ");
+		DrawString(ScreenWidth() / 2 - 100, 330, "HARBIN, CLYDE 8-927-1305 ");
+		DrawString(ScreenWidth() / 2 - 100, 360, "CHAVEZ, LUIS 8-947-1001");
+
+
+		//INPUT
 		if (GetMouse(0).bReleased)
 		{
 			int mouseX = GetMouseX();
@@ -263,10 +270,17 @@ public:
 		DrawRect(ScreenWidth() / 2 - 100, 20 * betMenuOption, 200, 11, olc::WHITE);
 
 		//button text
+		DrawString(ScreenWidth() / 2 - 310, 10, "PROYECTO II: ARBOL BINARIO DE EXPRESION");
 		DrawString(ScreenWidth() / 2 - 100, 20, "1. INSERTAR EXPRESION", olc::WHITE);
 		DrawString(ScreenWidth() / 2 - 100, 40, "2. VER ARBOL ", olc::WHITE);
 		DrawString(ScreenWidth() / 2 - 100, 60, "3. RECORRIDOS:", olc::WHITE);
 		
+
+		DrawString(ScreenWidth() / 2 - 80, 250, "INTEGRANTES: ");
+		DrawString(ScreenWidth() / 2 - 100, 300, "LAMELA, XAVIER 8-956-720 ");
+		DrawString(ScreenWidth() / 2 - 100, 330, "HARBIN, CLYDE 8-927-1305 ");
+		DrawString(ScreenWidth() / 2 - 100, 360, "CHAVEZ, LUIS 8-947-1001");
+
 
 		//option selected
 		if (GetMouse(0).bReleased || GetKey(olc::Key::ENTER).bReleased)//choose
@@ -311,6 +325,7 @@ public:
 			DrawRect(ScreenWidth()/2 -100, 20 * bstMenuOption, 200, 11, olc::WHITE);
 
 		//button text
+		DrawString(ScreenWidth() / 2 - 310, 10, "PROYECTO II: ARBOL BINARIO GENERAL");
 		DrawString(ScreenWidth() /2- 100, 20, "1. INSERTAR NODO EN ARBOL", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 40, "2. BORRAR NODO DEL ARBOL", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 60, "3. VER ARBOL ", olc::WHITE);
@@ -318,7 +333,15 @@ public:
 		DrawString(ScreenWidth() /2- 100, 100, "5. INFORMACION DEL ARBOL ", olc::WHITE);
 		DrawString(ScreenWidth() /2- 100, 120, "6. RECORRIDOS:", olc::WHITE);
 
+		DrawString(ScreenWidth() / 2 - 80, 250, "INTEGRANTES: ");
+		DrawString(ScreenWidth() / 2 - 100, 300, "LAMELA, XAVIER 8-956-720 ");
+		DrawString(ScreenWidth() / 2 - 100, 330, "HARBIN, CLYDE 8-927-1305 ");
+		DrawString(ScreenWidth() / 2 - 100, 360, "CHAVEZ, LUIS 8-947-1001");
+
+		
 		DrawString(ScreenWidth() /2+ 100 , ScreenHeight() - 25, "PRESIONA 'M' PARA MENU", olc::WHITE);
+
+
 
 
 		//option selected
