@@ -313,7 +313,7 @@ public:
 		int y = 125;
 		while (nodeptrList.size() > 1) 
 		{
-			std::string pathText = "FROM NODE " + std::to_string(nodeptrList.back()->getNodeValue()) + " TO NODE " + std::to_string(nodeptrList.at(nodeptrList.size() - 2)->getNodeValue());
+			std::string pathText = "DESDE " + std::to_string(nodeptrList.back()->getNodeValue()) + " HASTA " + std::to_string(nodeptrList.at(nodeptrList.size() - 2)->getNodeValue());
 
 			pge->DrawString(x, y, pathText, olc::GREEN);
 
@@ -608,8 +608,10 @@ int GetOperatorWeight(char op)
 	int weight = -1;
 
 	if		(op == '+' || op == '-') weight = 1;
-	else if (op == '*' || op == '/') weight = 2;
-	else if (op == '^' ) weight = 3;
+	//else if (op == '*' || op == '/') weight = 2;
+	else if (op == '*') weight = 2;
+	else if (op == '/') weight = 3;
+	else if (op == '^' ) weight = 4;
 	
 	return weight;
 }

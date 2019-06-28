@@ -376,10 +376,10 @@ public:
 	bool DrawInsertMode(float deltaTime)
 	{
 		Clear(olc::VERY_DARK_CYAN);
-		
+		//title	
 		DrawString(10, 20, "PRESIONA 'ENTER' PARA INSERTAR: ");
 		static int number = 0;
-
+		//input 
 		if (GetKey(olc::Key::K0).bReleased) number = number * 10 + 0;
 		if (GetKey(olc::Key::K1).bReleased) number = number * 10 + 1;
 		if (GetKey(olc::Key::K2).bReleased) number = number * 10 + 2;
@@ -391,7 +391,7 @@ public:
 		if (GetKey(olc::Key::K8).bReleased) number = number * 10 + 8;
 		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
 		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
-
+		//input number insertion
 		DrawString(10, 100, "INSERTANDO NUMERO: " + std::to_string(number), olc::RED);
 		if (GetKey(olc::Key::ENTER).bReleased)
 		{
@@ -401,10 +401,9 @@ public:
 		
 		//draw list
 		DrawString(20, 50, "LISTA DE NODOS(EMPIEZA EN RAIZ):");
-		
 		for(int i = 0; i < userNumberList.size(); i++)
 		DrawString(300, 50 + (i * 10), std::to_string(userNumberList.at(i)));
-
+		//exit & insert nodes in tree
 		if (GetKey(olc::Key::M).bReleased)
 		{
 				//add this to bst class
@@ -421,11 +420,11 @@ public:
 
 	bool DrawDeleteBstNode(float deltaTime)//NOT COMPLETED
 	{
+		//title 
 		Clear(olc::VERY_DARK_BLUE);
-
 		DrawString(10, 20, "PRESIONA 'ENTER' PARA BORRAR: ");
+		//input 
 		static int number = 0;
-
 		if (GetKey(olc::Key::K0).bReleased) number = number * 10 + 0;
 		if (GetKey(olc::Key::K1).bReleased) number = number * 10 + 1;
 		if (GetKey(olc::Key::K2).bReleased) number = number * 10 + 2;
@@ -437,16 +436,15 @@ public:
 		if (GetKey(olc::Key::K8).bReleased) number = number * 10 + 8;
 		if (GetKey(olc::Key::K9).bReleased) number = number * 10 + 9;
 		if (GetKey(olc::Key::BACK).bReleased) number /= 10;
-
+		//output text
 		DrawString(10, 50, "BORRANDO NUMERO: " + std::to_string(number), olc::RED);
+		//delete function call
 		if (GetKey(olc::Key::ENTER).bReleased)
 		{
 			bstTree.EliminateNode(number);
 			number = 0;
 		}
-
-	
-
+		//exit of mode 
 		if (GetKey(olc::Key::M).bReleased)
 		{
 			bstMenuOption = 1;
@@ -484,35 +482,26 @@ public:
 		if (printInfo)
 		{
 			nodeptr node = bstTree.Search(testNode);
-
 			//level
-			std::string level = "LEVEL: " + std::to_string( bstTree.getLevelNode( bstTree.getRoot(), testNode) );
+			std::string level = "NIVEL: " + std::to_string( bstTree.getLevelNode( bstTree.getRoot(), testNode) );
 			DrawString( 25, 75, level);
-
 			//length to get there
-			std::string lenght = "LENGHT: " + std::to_string( bstTree.LenghtOfaNode( testNode  ));
+			std::string lenght = "LONGITUD: " + std::to_string( bstTree.LenghtOfaNode( testNode  ));
 			DrawString( 25, 100, lenght);
-			
 			//closeth path
 			bstTree.getShortestPath(node, this);
-
 			//father
 			nodeptr parent = bstTree.getParentNode(testNode);
 			std::string parentText;
-			
-			if (parent != nullptr) parentText = "PARENT NODE: " + std::to_string(parent->getNodeValue());
-			else parentText = "PARENT NOT FOUND";
-			
+			if (parent != nullptr) parentText = "NODO PADRE: " + std::to_string(parent->getNodeValue());
+			else parentText = "PADRE NO ENCONTRADO";
 			DrawString(25, 200, parentText);
 			
 			//sibling
 			nodeptr brother = bstTree.getBrotherNode(node);
-			
 			int brotherValue = (brother != nullptr) ? brother->getNodeValue() : 0;
-			
-			std::string brotherText = "BROTHER OF " + std::to_string(testNode) + " IS " + std::to_string(brotherValue);
+			std::string brotherText = "HERMANO DE " + std::to_string(testNode) + " ES " + std::to_string(brotherValue);
 			DrawString(25, 225, brotherText);
-			
 			
 			//childs y grade(amount of childs)
 			int leftChild  = (node->left  != nullptr)  ? node->left->getNodeValue() : 0;
@@ -526,12 +515,10 @@ public:
 			else if ( (rightChild == 0 && leftChild != 0 )  || (leftChild == 0 && rightChild != 0) ) grade = 1;
 			else grade = 0;
 			
-			gradeText = "GRADE: " + std::to_string(grade);
-			sonsText = " RIGHTCHILD: " + std::to_string(rightChild) + " LEFTCHILD: " + std::to_string(leftChild);
-			
+			gradeText = "GRADO: " + std::to_string(grade);
+			sonsText = " HIJO DERECHO: " + std::to_string(rightChild) + " HIJO IZQUIERDO: " + std::to_string(leftChild);
 			DrawString(25, 250, gradeText);
 			DrawString(25, 275, sonsText);
-
 		}
 		
 
@@ -627,56 +614,45 @@ public:
 		DrawString(25, 100, inorderText, olc::WHITE);
 		DrawString(25, 150, postorderText, olc::WHITE);
 
+		//exit
 		if (GetKey(olc::Key::M).bReleased)
 			return true;
 
 		return false;
 	}
 
-
 	//BET DRAW FUNCTIONS
 	bool DrawBETInsertMode(float deltaTime)
 	{
-		Clear(olc::DARK_GREEN);
-
-
+		//title
+		Clear(olc::VERY_DARK_GREEN);
 		DrawString(10, 20, "PRESIONA 'ENTER' PARA INGRESAR EXPRESION: ");
 		static std::string testExpression = "";
-
 		static bool reading = true;
-		
+		//Capture Input
 		if (reading)
 		{
 			text.updateField();
-		
 			testExpression = text.getString();
-		
-
 			DrawString(100, 100, testExpression, olc::WHITE);
 		}
-		else 	
+		else 
 			DrawString(20, 150, "EXPRESION VALIDA!");
-		
-			//validate expresion 
+		//validate expresion 
 		if (GetKey(olc::Key::ENTER).bReleased && isBalanced(testExpression) )
 		{
 			userInfixExpression = testExpression;//transfer valid expression data
 			reading = false;
 		}
-		
-
+		//creating the tree & exit 
 		if (GetKey(olc::Key::M).bReleased)
 		{
 			testExpression = "";
 			reading = true;
-
-
 			//preparing for making tree
 			std::string posfix = ConvertToPosfix(userInfixExpression);
-
 			//root node of BET class
 			rootBETnode = ConstructTree(posfix);
-
 			return true;
 		}
 
@@ -743,9 +719,6 @@ public:
 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 
