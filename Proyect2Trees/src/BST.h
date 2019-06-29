@@ -3,38 +3,37 @@
 #define OLC_PGE_APPLICATION
 #include"olcPixelGameEngine.h"
 
-
-
 typedef struct Node* nodeptr;
 
 struct Node
 {
 public:
-	int letter;
+	int value;
 	struct Node* left;
 	struct Node* right;
 
-	Node(int data)
-	{
-		letter = data;
-		left = right = nullptr;
-	}
-	Node(int data, nodeptr _left, nodeptr _right)
-	{
-		letter = data;
-		left = _left;
-		right = _right;
-	}
-
-	// operaciones de acceso 
-	int getNodeValue()	{ return letter; }  
-	nodeptr getLeftSubTree()	{ return left; }  
-	nodeptr getRightSubTree(){ return right; }
-	// operaciones de modificación  
-	void setNodeValue(int data)	{ letter = data; }
-	void setleftBranch(nodeptr n)	{ left	 = n;	 }  
-	void setRightBranch(nodeptr n){ right  = n;	 } 
+public:
+	Node(int data);
+	
+	Node(int data, nodeptr _left, nodeptr _right);
+	
 };
+
+Node::Node(int data)
+{
+	value = data;
+	left = right = nullptr;
+}
+
+Node::Node(int data, nodeptr _left, nodeptr _right)
+{
+	value = data;
+	left = _left;
+	right = _right;
+}
+
+
+
 
 //BINARY SEARCH TREE
 class BST 
@@ -64,7 +63,7 @@ public:
 	nodeptr getLeftChildNode() 
 	{ 
 		if (m_root)
-			return m_root->getLeftSubTree();
+			return m_root->left;
 		else
 			throw " no left tree";
 	}
@@ -72,7 +71,7 @@ public:
 	nodeptr getRightChildNode() 
 	{ 
 		if (m_root)
-			return m_root->getRightSubTree();
+			return m_root->right;
 		else
 			throw " no right tree";
 	}
@@ -88,8 +87,8 @@ public:
 	{ 
 		if (root != nullptr) 
 		{ //post order track
-			DeleteTree(root->getLeftSubTree()  );      
-			DeleteTree(root->getRightSubTree() );      
+			DeleteTree(root->left);      
+			DeleteTree(root->right );      
 			std::cout << "\nNode deleted. ";
 			root = nullptr; 
 		} 
@@ -101,8 +100,8 @@ public:
 			return 0;
 		else
 		{
-			int leftHeight = HeightTree(root->getLeftSubTree());
-			int rightHeight   = HeightTree(root->getRightSubTree());    
+			int leftHeight = HeightTree(root->left);
+			int rightHeight   = HeightTree(root->right);    
 			if (leftHeight > rightHeight)
 				return leftHeight + 1;
 			else
@@ -115,7 +114,7 @@ public:
 		if (root == nullptr)       
 			return 0;    
 		else      
-			return 1 + NodesAmount(root->getLeftSubTree()) + NodesAmount(root->getRightSubTree()); 
+			return 1 + NodesAmount(root->left) + NodesAmount(root->right); 
 	}
 
 	bool IsComplete(nodeptr root)
@@ -124,10 +123,10 @@ public:
 			return true;
 		else
 		{
-			if (HeightTree(root->getLeftSubTree()) != HeightTree(root->getRightSubTree()))
+			if ( HeightTree(root->left) != HeightTree(root->right) )
 				return false;
 		}
-		return IsComplete(root->getLeftSubTree()) && IsComplete(root->getRightSubTree());
+		return IsComplete(root->left) && IsComplete(root->right);
 	}
 
 	bool isEmpty() { return m_root == nullptr; }
@@ -150,25 +149,25 @@ public:
 				parent = current;
 
 				//insert on left tree branch
-				if (data < parent->getNodeValue())
+				if (data < parent->value)
 				{
-					current = current->getLeftSubTree();
+					current = current->left;
 
 					//check for empty, its that the case add the new node
 					if (current == nullptr)
 					{
-						parent->setleftBranch(tempNode);
+						parent->left = tempNode;
 						return;
 					}
 				}
 				else//insert on right tree branch
 				{
-					current = current->getRightSubTree();
+					current = current->right;
 
 					//inset on right branch
 					if (current == nullptr)
 					{
-						parent->setRightBranch(tempNode);
+						parent->right = tempNode;
 						return;//exit funcion
 					}
 				}
@@ -183,32 +182,25 @@ public:
 	nodeptr Search(int data) 
 	{
 		nodeptr current = m_root;
-		std::cout<< "Visiting elements: ";
+		//std::cout<< "Visiting elements: ";
 
-		while (current->getNodeValue() != data) {
+		while (current->value != data) {
 
 			if (current != NULL) 
 			{
-				std::cout<< current->getNodeValue() << " , ";
-
+				//std::cout<< current->value << " , ";
 				//go to left tree
-				if (current->getNodeValue() > data) 
-				{
-					current = current->getLeftSubTree();
-				}  //else go to right tree
+				if (current->value > data) 
+					current = current->left;
+				  //else go to right tree
 				else 
-				{
-					current = current->getRightSubTree();
-				}
+					current = current->right;
 
 				//not found
 				if (current == NULL) 
-				{
 					return nullptr;
-				}
 			}
 		}
-
 		return current;
 	}
 
@@ -223,35 +215,32 @@ public:
 	//in case that node doesnt exit
 	if (subRoot == nullptr)
 		std::cout << "The node was not found in tree\n";
-	else if (data < subRoot->getNodeValue() )//check left branch
+	else if (data < subRoot->value )//check left branch
 	{
 		nodeptr leftNode;
-		
-		leftNode = EliminateNode(subRoot->getLeftSubTree(), data);
-		subRoot->setleftBranch(leftNode);
+		leftNode = EliminateNode(subRoot->left, data);
+		subRoot->left = leftNode;
 	}
-	else if (data > subRoot->getNodeValue() )
+	else if (data > subRoot->value )//check the right branch
 	{
 		nodeptr rightNode;
-		rightNode = EliminateNode(subRoot->getRightSubTree(), data);
-		subRoot->setRightBranch(rightNode);
+		rightNode = EliminateNode(subRoot->right, data);
+		subRoot->right = rightNode;
 	}
 	else // node found
 	{
 		nodeptr deleteNode;//Transfer data from the found node to this deletenODE
 		deleteNode = subRoot;
 		//check if deleteNode doesnt have left child
-		if (deleteNode->getLeftSubTree() == nullptr)
-			subRoot = deleteNode->getRightSubTree();
+		if (deleteNode->left == nullptr)
+			subRoot = deleteNode->right;
 		//check if deleteNode doesnt have right child
-		else if (deleteNode->getRightSubTree() == nullptr)
-			subRoot = deleteNode->getLeftSubTree();
+		else if (deleteNode->right == nullptr)
+			subRoot = deleteNode->left;
 		else//if have 2 child nodes
-		{
-			//to keep structure, replace the node data with the largest of the minor keys in the subtree
 			deleteNode = ReplaceNode(deleteNode);
+			//to keep structure, replace the node data with the largest of the minor keys in the subtree
 	
-		}
 		//after done proccess of finding and setting nodes, we delete all data inside that node
 		deleteNode = nullptr;
 	}
@@ -275,20 +264,20 @@ public:
 	*/
 	nodeptr a, p;
 	p = changeNode;
-	a = changeNode->getLeftSubTree();//all the left tree branch
-	while (a->getRightSubTree() != nullptr)//travel the tree from that rightbranch
+	a = changeNode->left;//all the left tree branch
+	while (a->right != nullptr)//travel the tree from that rightbranch
 	{
 		p = a;
-		a = a->getRightSubTree();
+		a = a->right;
 	}
 	//copy in 'changeNode' the value of the node 'a' is pointing to
-	changeNode->setNodeValue( a->getNodeValue() );
+	changeNode->value = a->value;
 
 	//'a' is the new left child of 'changeNode'
 	if (p == changeNode)
-		p->setleftBranch(a->getLeftSubTree());//link left branch
+		p->left = a->left;//link left branch
 	else
-		p->setRightBranch( a->getRightSubTree() );//link right branch
+		p->right = a->right;//link right branch
 	
 	return a;
 }
@@ -296,6 +285,11 @@ public:
 	void getShortestPath(nodeptr root, olc::PixelGameEngine* pge)
 	{
 		//find path
+		/*
+			in index 0 = store the node we want the path
+			in index n = store the node structure to that path
+		*/
+
 		std::vector<nodeptr> nodeptrList;
 		nodeptrList.push_back(root);
 		
@@ -304,8 +298,8 @@ public:
 		{
 			if (nodeptrList.back() == m_root)
 				search = false;
-			else 
-				nodeptrList.push_back( getParentNode( nodeptrList.back()->getNodeValue() ) );
+			else //add the parent of the node in that iteration, until found the node
+				nodeptrList.push_back( getParentNode( nodeptrList.back()->value ) );
 		}
 
 		//print path
@@ -313,7 +307,7 @@ public:
 		int y = 125;
 		while (nodeptrList.size() > 1) 
 		{
-			std::string pathText = "DESDE " + std::to_string(nodeptrList.back()->getNodeValue()) + " HASTA " + std::to_string(nodeptrList.at(nodeptrList.size() - 2)->getNodeValue());
+			std::string pathText = "FROM " + std::to_string(nodeptrList.back()->value) + " TO " + std::to_string(nodeptrList.at(nodeptrList.size() - 2)->value);
 
 			pge->DrawString(x, y, pathText, olc::GREEN);
 
@@ -335,20 +329,20 @@ public:
 			return nullptr;
 		
 		nodeptr parentNode(nullptr);
-
+		//we traverse the tree
 		while (root != nullptr)
 		{
-			if (data < root->getNodeValue())//left
+			if (data < root->value)//left
 			{
 				parentNode = root;//posible parent
-				root = root->getLeftSubTree();
+				root = root->left;
 			}
-			else if (data > root->getNodeValue())//right
+			else if (data > root->value)//right
 			{
 				parentNode = root;
-				root = root->getRightSubTree();
+				root = root->right;
 			}
-			else break;
+			else break;//if value = data then, we found the node 
 		}
 
 		return parentNode;
@@ -358,10 +352,10 @@ public:
 	{
 		if (root == nullptr)
 			return 0;
-		if (root->getLeftSubTree() == nullptr && root->getRightSubTree() == nullptr)
+		if (root->left == nullptr && root->right == nullptr)
 			return 1;
 		else
-			return getLeafNodesAmount(root->getLeftSubTree()) + getLeafNodesAmount(root->getRightSubTree());
+			return getLeafNodesAmount(root->left) + getLeafNodesAmount(root->right);
 		
 	}
 
@@ -377,58 +371,55 @@ public:
 			return 0;
 
 		//if node is found
-		if (root->getNodeValue() == data)
+		if (root->value == data)
 			return level;
 
-		int downlevel = getLevelNode(root->getLeftSubTree(), data, level + 1);
+		int downlevel = getLevelNode(root->left, data, level + 1);
 		
 		if (downlevel != 0)
 			return downlevel;
 
-		downlevel = getLevelNode(root->getRightSubTree(), data, level + 1);
+		downlevel = getLevelNode(root->right, data, level + 1);
 
 		return downlevel;
 
 	}
 	
-	//TESTING
 	nodeptr getBrotherNode(nodeptr node)
 	{	
-		nodeptr parent = getParentNode( node->getNodeValue() );
+		nodeptr parent = getParentNode( node->value );//we search for parent of that node
 
-		if (parent != nullptr)
+		if (parent != nullptr)//if parent found...
 		{
 			nodeptr parentleftChild = parent->left;
 			nodeptr parentRightChild = parent->right;
 		
-			if (parentleftChild != nullptr && parentRightChild == nullptr)//solo el izq
+			//compare childs value
+			if (parentleftChild != nullptr && parentRightChild == nullptr)//if have only left child
 			{
-				if (parentleftChild->getNodeValue() != node->letter)
+				if (parentleftChild->value != node->value)//if not the same
 					return parentleftChild;
 				else
-					return nullptr;//porque encontro el mismo nodo q llamo la funcion
+					return nullptr;//if equal, return null, doesnt have a brother
 			}
 			else if (parentleftChild == nullptr && parentRightChild != nullptr)//solo el derecho
 			{
-				if (parentRightChild->getNodeValue() != node->letter)
+				if (parentRightChild->value != node->value)
 					return parentRightChild;
 				else
 					return nullptr;//porque encontro el mismo nodo q llamo la funcion osea no tiene hermano
 			}
 			else if (parentleftChild != nullptr && parentRightChild != nullptr)//ambos hijos
 			{
-				if (parentleftChild->getNodeValue() != node->letter && parentRightChild->getNodeValue() == node->letter)
+				if (parentleftChild->value != node->value && parentRightChild->value == node->value)//if left not equal return it
 					return parentleftChild;
-				else if (parentleftChild->getNodeValue() == node->letter && parentRightChild->getNodeValue() != node->letter)
+				else if (parentleftChild->value == node->value && parentRightChild->value != node->value)//if right not equal return it
 					return parentRightChild;
 			}
 			
 		}
-		else
+		else//if doesnt have parent, then doesnt have a brother
 			return nullptr;
-
-		
-		
 	}
 
 	int LenghtOfaNode(int data)
@@ -436,26 +427,23 @@ public:
 		nodeptr current = m_root;
 		int iter = 0;
 
-		while (current->getNodeValue() != data) {
+		//traverse the tree
+		while (current->value != data) {
 
 			if (current != NULL)
 			{
 				iter++;
 				//go to left tree
-				if (current->getNodeValue() > data)
-				{
-					current = current->getLeftSubTree();
-				}  //else go to right tree
+				if (current->value > data)
+					current = current->left;
+				  //else go to right tree
 				else
-				{
-					current = current->getRightSubTree();
-				}
+					current = current->right;
 
 				//not found
 				if (current == NULL)
-				{
 					return 0;
-				}
+
 			}
 		}
 
@@ -467,75 +455,66 @@ public:
 	{
 		//RAIZ - IZQ - DERECHA
 		if (root != nullptr)//proccess 
-			container += std::to_string(root->getNodeValue()) + " - ";
+			container += std::to_string(root->value) + " - ";
 		
-		if (root != nullptr && root->getLeftSubTree() != nullptr)//si hay lado izq
-			PreOrder(root->getLeftSubTree(), container);
-		if (root != nullptr && root->getRightSubTree() != nullptr)//si hay lado der
-			PreOrder(root->getRightSubTree(), container);
+		if (root != nullptr && root->left != nullptr)//si hay lado izq
+			PreOrder(root->left, container);
+		if (root != nullptr && root->right != nullptr)//si hay lado der
+			PreOrder(root->right, container);
 	}
 	
 	
 	void InOrder(nodeptr root, std::string& container)
 	{
 		//IZQ - RAIZ -DERECHA
-		if (root != nullptr && root->getLeftSubTree() != nullptr)//left branch
-			InOrder(root->getLeftSubTree(), container);
+		if (root != nullptr && root->left != nullptr)//left branch
+			InOrder(root->left, container);
 		
 		if (root != nullptr)//process you want to do
-			container += std::to_string(root->getNodeValue()) + " - ";
+			container += std::to_string(root->value) + " - ";
 
-		if (root != nullptr && root->getRightSubTree() != nullptr)//right branch
-			InOrder(root->getRightSubTree(), container);
+		if (root != nullptr && root->right != nullptr)//right branch
+			InOrder(root->right, container);
 	}
 
 
 	void PostOrder(nodeptr root, std::string& container)
 	{
 		//IZQ - DER- RAIZ
-		if (root != nullptr && root->getLeftSubTree() != nullptr)
-			PostOrder(root->getLeftSubTree(), container);
-		if (root != nullptr && root->getRightSubTree() != nullptr)
-			PostOrder(root->getRightSubTree(), container);
+		if (root != nullptr && root->left != nullptr)
+			PostOrder(root->left, container);
+		if (root != nullptr && root->right != nullptr)
+			PostOrder(root->right, container);
 		
 		if (root != nullptr)//process
-			container += std::to_string(root->getNodeValue()) + " - ";
+			container += std::to_string(root->value) + " - ";
 	}
 
 
 };
 
-
-
 // Binary Expression Tree functions 
 // TODO: Convert all this magic into a class
-//typedef NodeBET* nodebetptr;
 
-class NodeBET 
+//typedef NodeBET* BETptr;
+
+struct NodeBET 
 {
-private:
+public:
 	char letter;
 	NodeBET* right;
 	NodeBET* left;
 
-public:
-	NodeBET(char data)
-	{
-		letter = data;
-		right = left = nullptr;
-	}
-
-	//setters & getters
-	void setNodeValue(char data) { letter = data; }
-	void setleftBranch(NodeBET* n) { left = n; }
-	void setRightBranch(NodeBET* n) { right = n; }
-
-	NodeBET* getLeftSubTree() { return left; }
-	NodeBET* getRightSubTree() { return right; }
-	char getNodeValue() { return letter; }
-
-
+	NodeBET(char data);
 };
+
+NodeBET::NodeBET(char data)
+{
+	letter = data;
+	right = left = nullptr;
+}
+
+
 
 
 bool isLetter(char c)
@@ -747,8 +726,8 @@ NodeBET* ConstructTree(std::string postfix)
 			stack.pop();
 
 			//make them children
-			newNode->setRightBranch(t1);
-			newNode->setleftBranch(t2);
+			newNode->right = t1;
+			newNode->left = t2;
 
 			//add to stack
 			stack.push(newNode);

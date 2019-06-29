@@ -476,19 +476,19 @@ public:
 			//father
 			nodeptr parent = bstTree.getParentNode(testNode);
 			std::string parentText;
-			if (parent != nullptr) parentText = "FATHER NODE: " + std::to_string(parent->getNodeValue());
+			if (parent != nullptr) parentText = "FATHER NODE: " + std::to_string(parent->value );
 			else parentText = "FATHER NOT FOUND";
 			DrawString(25, 200, parentText);
 			
 			//sibling
 			nodeptr brother = bstTree.getBrotherNode(node);
-			int brotherValue = (brother != nullptr) ? brother->getNodeValue() : 0;
+			int brotherValue = (brother != nullptr) ? brother->value : 0;
 			std::string brotherText = "BROTHER OF: " + std::to_string(testNode) + " IS " + std::to_string(brotherValue);
 			DrawString(25, 225, brotherText);
 			
 			//childs y grade(amount of childs)
-			int leftChild  = (node->left  != nullptr)  ? node->left->getNodeValue() : 0;
-			int rightChild = (node->right != nullptr)  ? node->right->getNodeValue() : 0;
+			int leftChild  = (node->left  != nullptr)  ? node->left->value : 0;
+			int rightChild = (node->right != nullptr)  ? node->right->value : 0;
 
 			int grade = 0;
 			std::string sonsText = "";
@@ -520,23 +520,23 @@ public:
 			
 			DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
 
-			if (root->getLeftSubTree() != nullptr) 
-				DrawBSTree(root->getLeftSubTree() , x, y, x - incX, y + incY, incX * 0.5, incY);
+			if (root->left != nullptr) 
+				DrawBSTree(root->left , x, y, x - incX, y + incY, incX * 0.5, incY);
 			
-			if (root->getRightSubTree() != nullptr)
-				DrawBSTree(root->getRightSubTree(), x, y, x + incX, y + incY, incX * 0.5, incY);
+			if (root->right != nullptr)
+				DrawBSTree(root->right, x, y, x + incX, y + incY, incX * 0.5, incY);
 
 			FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
 		
-			if (root->getLeftSubTree() == nullptr && root->getRightSubTree() == nullptr)//LEAF NODE
+			if (root->left == nullptr && root->right == nullptr)//LEAF NODE
 			{
 				DrawCircle(x,y, 12, olc::MAGENTA);
-				DrawString(x-4, y-2, std::to_string(root->getNodeValue()), olc::WHITE);
+				DrawString(x-4, y-2, std::to_string(root->value), olc::WHITE);
 			}
 			else
 			{
 				DrawCircle(x,y, 12, olc::YELLOW);
-				DrawString(x-4, y-2, std::to_string(root->getNodeValue()), olc::WHITE);
+				DrawString(x-4, y-2, std::to_string(root->value), olc::WHITE);
 			}
 			
 			if (GetKey(olc::Key::M).bReleased)
@@ -647,25 +647,25 @@ public:
 	{
 		DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
 
-		if (root->getLeftSubTree() != nullptr)
-			DrawBETree(root->getLeftSubTree(), x, y, x - incX, y + incY, incX * 0.5, incY);
+		if (root->left != nullptr)
+			DrawBETree(root->left, x, y, x - incX, y + incY, incX * 0.5, incY);
 
-		if (root->getRightSubTree() != nullptr)
-			DrawBETree(root->getRightSubTree(), x, y, x + incX, y + incY, incX * 0.5, incY);
+		if (root->right != nullptr)
+			DrawBETree(root->right, x, y, x + incX, y + incY, incX * 0.5, incY);
 
 		FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
 
-		if (root->getLeftSubTree() == nullptr && root->getRightSubTree() == nullptr)//LEAF NODE
+		if (root->left == nullptr && root->right == nullptr)//LEAF NODE
 		{
 			DrawCircle(x, y, 12, olc::MAGENTA);
 			std::string c = "";
-			DrawString(x - 4, y - 2, c += root->getNodeValue(), olc::WHITE);
+			DrawString(x - 4, y - 2, c += root->letter, olc::WHITE);
 		}
 		else
-		{
+		{//parent nodes
 			DrawCircle(x, y, 12, olc::YELLOW);
 			std::string c = "";
-			DrawString(x - 4, y - 2, c += root->getNodeValue(), olc::WHITE);
+			DrawString(x - 4, y - 2, c += root->letter, olc::WHITE);
 		}
 
 		if (GetKey(olc::Key::M).bReleased)
