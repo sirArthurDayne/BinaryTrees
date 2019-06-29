@@ -106,15 +106,15 @@ private:
 	void DrawBstMenu();
 	
 	//BST DRAW FUNCTIONS
-	bool DrawInsertMode(float deltaTime);
-	bool DrawDeleteBstNode(float deltaTime);
-	bool DrawNodeInfo(float deltaTime);
+	bool DrawInsertMode();
+	bool DrawDeleteBstNode();
+	bool DrawNodeInfo();
 	bool DrawBSTree(nodeptr root, int lineFromX, int lineFromY, int x, int y, int incX, int incY);
 	bool DrawBSTreeInfo();
 	bool DrawBstTraversalls();
 
 	//BET DRAW FUNCTIONS
-	bool DrawBETInsertMode(float deltaTime);
+	bool DrawBETInsertMode();
 	bool DrawBETree(NodeBET* root, int lineFromX, int lineFromY, int x, int y, int incX, int incY);
 	bool DrawBETTraversals();
 	

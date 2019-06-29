@@ -38,14 +38,16 @@ bool TreeVisualizer::OnUserUpdate(float fElapsedTime)
 
 	else if (state == BST_INSERT_MODE)//1.1
 	{
-		if (DrawInsertMode(fElapsedTime))
+		if (DrawInsertMode())
 			state = BST_MENU;
 	}
+	
 	else if (state == BST_DELETE_MODE)//1.2
 	{
-		if (DrawDeleteBstNode(fElapsedTime))
+		if (DrawDeleteBstNode())
 			state = BST_MENU;
 	}
+	
 	else if (state == BST_TREE)//1.3
 	{
 		Clear(olc::BLACK);
@@ -54,19 +56,22 @@ bool TreeVisualizer::OnUserUpdate(float fElapsedTime)
 	}
 	else if (state == NODE_INFO)//1.4
 	{
-		if (DrawNodeInfo(fElapsedTime))
+		if (DrawNodeInfo())
 			state = BST_MENU;
 	}
+	
 	else if (state == TREE_INFO)//1.5
 	{
 		if (DrawBSTreeInfo())
 			state = BST_MENU;
 	}
+	
 	else if (state == BST_TRAVERSAL)//1.6
 	{
 		if (DrawBstTraversalls())
 			state = BST_MENU;
 	}
+	
 
 	///////2. BET STATES///////
 	else if (state == BET_MENU)
@@ -74,11 +79,11 @@ bool TreeVisualizer::OnUserUpdate(float fElapsedTime)
 
 	else if (state == BET_INSERT_MODE)//2.1
 	{
-		if (DrawBETInsertMode(fElapsedTime))
-		{
+		if (DrawBETInsertMode())
 			state = BET_MENU;
-		}
 	}
+
+	
 	else if (state == BET_TREE)
 	{
 		Clear(olc::BLACK);
@@ -90,6 +95,7 @@ bool TreeVisualizer::OnUserUpdate(float fElapsedTime)
 		if (DrawBETTraversals())
 			state = BET_MENU;
 	}
+
 
 	if (GetKey(olc::ESCAPE).bReleased)
 		return false;
@@ -261,7 +267,7 @@ void TreeVisualizer::DrawBstMenu()
 
 //BST DRAW FUNCTIONS
 
-bool TreeVisualizer::DrawInsertMode(float deltaTime)
+bool TreeVisualizer::DrawInsertMode()
 {
 	Clear(olc::VERY_DARK_CYAN);
 	//title	
@@ -307,7 +313,7 @@ bool TreeVisualizer::DrawInsertMode(float deltaTime)
 	return false;
 }
 
-bool TreeVisualizer::DrawDeleteBstNode(float deltaTime)//NOT COMPLETED
+bool TreeVisualizer::DrawDeleteBstNode()//NOT COMPLETED
 {
 	//title 
 	Clear(olc::VERY_DARK_BLUE);
@@ -343,7 +349,7 @@ bool TreeVisualizer::DrawDeleteBstNode(float deltaTime)//NOT COMPLETED
 	return false;
 }
 
-bool TreeVisualizer::DrawNodeInfo(float deltaTime)
+bool TreeVisualizer::DrawNodeInfo()
 {
 	//choose the node to extract info
 	Clear(olc::VERY_DARK_RED);
@@ -425,26 +431,26 @@ bool TreeVisualizer::DrawNodeInfo(float deltaTime)
 bool TreeVisualizer::DrawBSTree(nodeptr root, int lineFromX, int lineFromY, int x, int y, int incX, int incY)
 {
 
-	DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
+		DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
 
-	if (root->left != nullptr)
-		DrawBSTree(root->left, x, y, x - incX, y + incY, incX * 0.5, incY);
+		if (root->left != nullptr)
+			DrawBSTree(root->left, x, y, x - incX, y + incY, incX * 0.5, incY);
 
-	if (root->right != nullptr)
-		DrawBSTree(root->right, x, y, x + incX, y + incY, incX * 0.5, incY);
+		if (root->right != nullptr)
+			DrawBSTree(root->right, x, y, x + incX, y + incY, incX * 0.5, incY);
+		FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
 
-	FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
-
-	if (root->left == nullptr && root->right == nullptr)//LEAF NODE
-	{
-		DrawCircle(x, y, 12, olc::MAGENTA);
-		DrawString(x - 4, y - 2, std::to_string(root->value), olc::WHITE);
-	}
-	else
-	{
-		DrawCircle(x, y, 12, olc::YELLOW);
-		DrawString(x - 4, y - 2, std::to_string(root->value), olc::WHITE);
-	}
+			//DRAW THE NODES
+			if (root->left == nullptr && root->right == nullptr)//LEAF NODE
+			{
+				DrawCircle(x, y, 12, olc::MAGENTA);
+				DrawString(x - 4, y - 2, std::to_string(root->value), olc::WHITE);
+			}
+			else
+			{
+				DrawCircle(x, y, 12, olc::YELLOW);
+				DrawString(x - 4, y - 2, std::to_string(root->value), olc::WHITE);
+			}
 
 	if (GetKey(olc::Key::M).bReleased)
 		return true;
@@ -459,11 +465,11 @@ bool TreeVisualizer::DrawBSTreeInfo()
 	DrawString(ScreenWidth() / 2 - 100, 25, "INFORMATION ABOUT TREE", olc::WHITE);
 
 	//calculations
-	nodeptr root = bstTree.getRoot();
+	nodeptr root     = bstTree.getRoot();
 	int heightofTree = bstTree.HeightTree(root);
-	int totalNodes = bstTree.NodesAmount(root);
-	int leafNodes = bstTree.getLeafNodesAmount(root);
-	bool isComplete = bstTree.IsComplete(root);
+	int totalNodes   = bstTree.NodesAmount(root);
+	int leafNodes    = bstTree.getLeafNodesAmount(root);
+	bool isComplete  = bstTree.IsComplete(root);
 
 	std::string heighText = "HEIGHT OF TREE: " + std::to_string(heightofTree);
 	std::string totalText = "TOTAL NODES: " + std::to_string(totalNodes);
@@ -512,7 +518,7 @@ bool TreeVisualizer::DrawBstTraversalls()
 }
 
 //BET DRAW FUNCTIONS
-bool TreeVisualizer::DrawBETInsertMode(float deltaTime)
+bool TreeVisualizer::DrawBETInsertMode()
 {
 	//title
 	Clear(olc::VERY_DARK_GREEN);
@@ -552,28 +558,30 @@ bool TreeVisualizer::DrawBETInsertMode(float deltaTime)
 
 bool TreeVisualizer::DrawBETree(NodeBET* root, int lineFromX, int lineFromY, int x, int y, int incX, int incY)
 {
-	DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
 
-	if (root->left != nullptr)
-		DrawBETree(root->left, x, y, x - incX, y + incY, incX * 0.5, incY);
+		DrawLine(lineFromX, lineFromY, x, y, olc::DARK_GREEN);
 
-	if (root->right != nullptr)
-		DrawBETree(root->right, x, y, x + incX, y + incY, incX * 0.5, incY);
+		if (root->left != nullptr)
+			DrawBETree(root->left, x, y, x - incX, y + incY, incX * 0.5, incY);
 
-	FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
+		if (root->right != nullptr)
+			DrawBETree(root->right, x, y, x + incX, y + incY, incX * 0.5, incY);
 
-	if (root->left == nullptr && root->right == nullptr)//LEAF NODE
-	{
-		DrawCircle(x, y, 12, olc::MAGENTA);
-		std::string c = "";
-		DrawString(x - 4, y - 2, c += root->letter, olc::WHITE);
-	}
-	else
-	{//parent nodes
-		DrawCircle(x, y, 12, olc::YELLOW);
-		std::string c = "";
-		DrawString(x - 4, y - 2, c += root->letter, olc::WHITE);
-	}
+		FillCircle(x, y, 12, olc::DARK_RED);//color of nodes
+
+		if (root->left == nullptr && root->right == nullptr)//LEAF NODE
+		{
+			DrawCircle(x, y, 12, olc::MAGENTA);
+			std::string c = "";
+			DrawString(x - 4, y - 2, c += root->letter, olc::WHITE);
+		}
+		else
+		{//parent nodes
+			DrawCircle(x, y, 12, olc::YELLOW);
+			std::string c = "";
+			DrawString(x - 4, y - 2, c += root->letter, olc::WHITE);
+		}
+
 
 	if (GetKey(olc::Key::M).bReleased)
 		return true;
