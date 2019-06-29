@@ -126,6 +126,7 @@
     <ClInclude Include="src\Node.h" />
     <ClInclude Include="src\NodeBET.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
+    <ClInclude Include="src\ScreenSetUP.h" />
     <ClInclude Include="src\TreeVisualizer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
