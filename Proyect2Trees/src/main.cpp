@@ -1,3 +1,5 @@
+#define OLC_PGE_APPLICATION
+#include "olcPixelGameEngine.h"
 #include"TreeVisualizer.h"
 
 int main()
@@ -9,5 +11,7 @@ int main()
 	TreeVisualizer app;
 	if (!setup && app.Construct(screenW, screenH, 2, 2, fullScreen))
 		app.Start();
+
+	
 	return 0;
 }

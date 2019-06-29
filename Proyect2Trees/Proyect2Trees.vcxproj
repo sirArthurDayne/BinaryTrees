@@ -117,10 +117,14 @@
   <ItemGroup>
     <ClCompile Include="src\BST.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Node.cpp" />
+    <ClCompile Include="src\NodeBET.cpp" />
     <ClCompile Include="src\TreeVisualizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BST.h" />
+    <ClInclude Include="src\Node.h" />
+    <ClInclude Include="src\NodeBET.h" />
     <ClInclude Include="src\olcPixelGameEngine.h" />
     <ClInclude Include="src\TreeVisualizer.h" />
   </ItemGroup>

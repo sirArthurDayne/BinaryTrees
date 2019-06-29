@@ -9,7 +9,7 @@ NodeBET* rootBETnode;
 nodeptr rootBSTnode(nullptr);
 BST bstTree(rootBSTnode);
 
-/////////////////////TEXT INPUT MANAGER///////////////////////////////////////
+/////////////////////TEXT INPUT MANAGER FOR EXPRESSION TREE///////////////////////////////////////
 class TextField {
 private:
 	int maxLetters = 25, screenW = 240, screenH = 220;
@@ -80,13 +80,13 @@ enum STATES {
 };
 
 
-/////////////////////////////////// THIS IS FOR ALL THE STUFF YOU NORMALY DO IN THE PGE.... /////////////////////////////////
+/////////////////////////////////// PGE APPLICATION.... /////////////////////////////////
 
 class TreeVisualizer : public olc::PixelGameEngine
 {
 private:
 	
-	
+	//aloud text class to work inside the pge app
 	TextField text = TextField(*this);
 	
 	//creating machine 
@@ -105,7 +105,7 @@ public:
 	{
 		sAppName = "Proyect 2 Binary Trees";
 	}
-public:
+private:
 	bool OnUserCreate() override
 	{
 		state = PRESENTATION;//setup default state
@@ -622,7 +622,7 @@ public:
 		else 
 			DrawString(20, 150, "VALID EXPRESSION!");
 		//validate expresion 
-		if (GetKey(olc::Key::ENTER).bReleased && isBalanced(testExpression) )
+		if (GetKey(olc::Key::ENTER).bReleased && rootBETnode->isBalanced(testExpression) )
 		{
 			userInfixExpression = testExpression;//transfer valid expression data
 			reading = false;
@@ -634,9 +634,9 @@ public:
 			testExpression = "";
 			reading = true;
 			//preparing for making tree
-			std::string posfix = ConvertToPosfix(userInfixExpression);
+			std::string posfix = rootBETnode->ConvertToPosfix(userInfixExpression);
 			//root node of BET class
-			rootBETnode = ConstructTree(posfix);
+			rootBETnode = rootBETnode->ConstructTree(posfix);
 			return true;
 		}
 
@@ -684,8 +684,8 @@ public:
 		std::string posfixText = "";
 
 		infixText = userInfixExpression;
-		posfixText = ConvertToPosfix(userInfixExpression);
-		prefixText = ConvertToPrefix(posfixText);
+		posfixText = rootBETnode->ConvertToPosfix(userInfixExpression);
+		prefixText = rootBETnode->ConvertToPrefix(posfixText);
 
 		//output
 		DrawString(25, 50, "PREFIX: " + prefixText, olc::WHITE);
@@ -700,7 +700,6 @@ public:
 
 		return false;
 	}
-
 
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
